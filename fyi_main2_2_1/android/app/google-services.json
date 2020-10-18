@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "213654932931",
+    "firebase_url": "https://fyi-vitc.firebaseio.com",
+    "project_id": "fyi-vitc",
+    "storage_bucket": "fyi-vitc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213654932931:android:1655aff2a5660c6b018176",
+        "android_client_info": {
+          "package_name": "com.example.fyi_main2_2_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213654932931-npjeavqmguh0qdmc66fi3o0gq9k0bom2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFn-sm0T_ivVdfEO0aT49f8f_0ryGY9ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213654932931-npjeavqmguh0qdmc66fi3o0gq9k0bom2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
