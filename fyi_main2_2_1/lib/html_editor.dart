@@ -155,98 +155,114 @@ class HtmlEditorState extends State<HtmlEditor> {
             borderRadius: BorderRadius.all(Radius.circular(4)),
             border: Border.all(color: Color(0xffececec), width: 1),
           ),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: WebView(
-              key: _mapKey,
-              onWebResourceError: (e) {
-                print("error ${e.description}");
-              },
-              onWebViewCreated: (webViewController) {
-                _controller = webViewController;
+      child: Container(
+        // height: 300,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: WebView(
+                key: _mapKey,
+                onWebResourceError: (e) {
+                  print("error ${e.description}");
+                },
+                onWebViewCreated: (webViewController) {
+                  _controller = webViewController;
 
-                if (Platform.isAndroid) {
-                  final filename =
-                      'packages/html_editor/summernote/summernote.html';
-                  _controller.loadUrl(
-                      "file:///android_asset/flutter_assets/" + filename);
-                } else {
-                  _loadHtmlFromAssets();
-                }
-              },
-              javascriptMode: JavascriptMode.unrestricted,
-              gestureNavigationEnabled: true,
-              gestureRecognizers: [
-                Factory(
-                        () => VerticalDragGestureRecognizer()..onUpdate = (_) {}),
-              ].toSet(),
-              javascriptChannels: <JavascriptChannel>[
-                getTextJavascriptChannel(context)
-              ].toSet(),
-              onPageFinished: (String url) {
-                if (widget.hint != null) {
-                  setHint(widget.hint);
-                } else {
-                  setHint("");
-                }
+                  if (Platform.isAndroid) {
+                    final filename =
+                        'packages/html_editor/summernote/summernote.html';
+                    _controller.loadUrl(
+                        "file:///android_asset/flutter_assets/" + filename);
+                  } else {
+                    _loadHtmlFromAssets();
+                  }
+                },
+                javascriptMode: JavascriptMode.unrestricted,
+                gestureNavigationEnabled: true,
+                gestureRecognizers: [
+                  Factory(
+                          () => VerticalDragGestureRecognizer()..onUpdate = (_) {}),
+                ].toSet(),
+                javascriptChannels: <JavascriptChannel>[
+                  getTextJavascriptChannel(context)
+                ].toSet(),
+                onPageFinished: (String url) {
+                  if (widget.hint != null) {
+                    setHint(widget.hint);
+                  } else {
+                    setHint("");
+                  }
 
-                setFullContainer();
-                if (widget.value != null) {
-                  setText(widget.value);
-                }
-              },
+                  setFullContainer();
+                  if (widget.value != null) {
+                    setText(widget.value);
+                  }
+                },
+              ),
             ),
-          ),
-          widget.showBottomToolbar
-              ? Divider()
-              : Container(
-            height: 1,
-          ),
-          widget.showBottomToolbar
-              ? Padding(
-            padding: const EdgeInsets.only(
-                left: 4.0, right: 4, bottom: 8, top: 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                widgetIcon(Icons.image, "Image from device", onKlik: () {
-                  widget.useBottomSheet
-                      ? bottomSheetPickImage(context)
-                      : dialogPickImage(context);
-                }),
-                widgetIcon(Icons.content_copy, "Copy", onKlik: () async {
-                  String data = await getText();
-                  Clipboard.setData(new ClipboardData(text: data));
-                }),
-                widgetIcon(Icons.content_paste, "Paste",
-                    onKlik: () async {
-                      ClipboardData data =
-                      await Clipboard.getData(Clipboard.kTextPlain);
+            widget.showBottomToolbar ? Divider(): Container(height: 1,),
+            widget.showBottomToolbar
+                ? Padding(
+              padding: const EdgeInsets.only(
+                  left: 4.0, right: 4, bottom: 8, top: 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  widgetIcon(Icons.image, "Image from device", onKlik: () {
+                    widget.useBottomSheet
+                        ? bottomSheetPickImage(context)
+                        : dialogPickImage(context);
+                  }),
+                ],
+              ),
+            )
+                : Padding(
+              padding: const EdgeInsets.only(
+                  left: 4.0, right: 4, bottom: 8, top: 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  widgetIcon(Icons.content_copy, "Copy", onKlik: () async {
+                    String data = await getText();
+                    Clipboard.setData(new ClipboardData(text: data));
+                  }),
+                  widgetIcon(Icons.content_paste, "Paste",
+                      onKlik: () async {
+                        ClipboardData data =
+                        await Clipboard.getData(Clipboard.kTextPlain);
 
-                      String txtIsi = data.text
-                          .replaceAll("'", '\\"')
-                          .replaceAll('"', '\\"')
-                          .replaceAll("[", "\\[")
-                          .replaceAll("]", "\\]")
-                          .replaceAll("\n", "<br/>")
-                          .replaceAll("\n\n", "<br/>")
-                          .replaceAll("\r", " ")
-                          .replaceAll('\r\n', " ");
-                      String txt =
-                          "\$('.note-editable').append( '" + txtIsi + "');";
-                      _controller.evaluateJavascript(txt);
-                    }),
-              ],
-            ),
-          )
-              : Container(
-            height: 1,
-          )
-        ],
+                        String txtIsi = data.text
+                            .replaceAll("'", '\\"')
+                            .replaceAll('"', '\\"')
+                            .replaceAll("[", "\\[")
+                            .replaceAll("]", "\\]")
+                            .replaceAll("\n", "<br/>")
+                            .replaceAll("\n\n", "<br/>")
+                            .replaceAll("\r", " ")
+                            .replaceAll('\r\n', " ");
+                        String txt =
+                            "\$('.note-editable').append( '" + txtIsi + "');";
+                        _controller.evaluateJavascript(txt);
+                      }),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
+
+
+  // Container imagecont(BuildContext context) {
+  //   return Container(
+  //                 child: widgetIcon(Icons.image, "Image from device", onKlik: () {
+  //                   widget.useBottomSheet
+  //                       ? bottomSheetPickImage(context)
+  //                       : dialogPickImage(context);
+  //                 }),
+  //               );
+  // }
 
   JavascriptChannel getTextJavascriptChannel(BuildContext context) {
     return JavascriptChannel(

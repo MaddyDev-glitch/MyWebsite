@@ -5,6 +5,8 @@ import 'package:fyi_main2_2_1/texty.dart';
 // import 'package:fyi_forms/imageslides.dart';
 import 'articlepage.dart';
 import 'imageslides.dart';
+import 'demo.dart';
+import 'package:rich_edit/rich_edit.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FYI Mobile App',
-      home: MyCustomForm(),
+      home: MyHomePage(),
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
