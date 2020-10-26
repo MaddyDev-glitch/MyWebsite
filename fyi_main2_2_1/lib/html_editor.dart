@@ -1,5 +1,4 @@
 library html_editor;
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -11,7 +10,6 @@ import 'package:html_editor/local_server.dart';
 import 'package:html_editor/pick_image.dart';
 import 'package:path/path.dart' as p;
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
 String token =
@@ -22,10 +20,6 @@ String url =
     "https://us-central1-fyi-vitc.cloudfunctions.net//api/article/imageUpload";
 FormData formData;
 var globresponse;
-/*
-* Created by riyadi rb on 2/5/2020.
-* link  : https://github.com/xrb21/flutter-html-editor
-*/
 
 typedef void OnClik();
 
@@ -119,14 +113,10 @@ class HtmlEditorState extends State<HtmlEditor> {
           queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
           data: formData); //{"image": formData}
       print("GETHHTTP fucntion print -> $response");
-      // String a = response.toString();
-      // print("LENGTH=");
-      // print(a.length);
       globresponse=response;
     } catch (e) {
       print(e);
       print("ERROR");
-      // print(formData.toString());
     }
   }
 

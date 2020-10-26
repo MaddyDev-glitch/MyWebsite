@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fyi_main2_2_1/articlepage.dart';
 import 'html_editor.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -9,69 +11,57 @@ import 'package:html_editor/pick_image.dart';
 
 import 'package:flutter/foundation.dart';
 
+List majorSend=[];
 List<GlobalKey<HtmlEditorState>> keyEditor1 =
-List<GlobalKey<HtmlEditorState>>(200);
+    List<GlobalKey<HtmlEditorState>>(200);
 int i = 1;
-int _count = 2;
-int _countimg = 1;
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
-File _image;
-var _imageList = List<File>(200);
-String testfd;
-String url =
-    "https://us-central1-fyi-vitc.cloudfunctions.net//api/article/imageUpload";
 FormData formData;
-
-
+List<String> arrayData = List<String>(200);
 
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
+}
 
-}
-void getHttp() async {
-  var dio = Dio();
-  print({_image.path});
-  print(_image);
-  String fileName = _image.path.split('/').last;
-  print(fileName);
-  try {
-    formData = FormData.fromMap({
-      "image": await MultipartFile.fromFile(_image.path, filename: fileName),
-    });
-    Response response = await dio.post(
-        "https://us-central1-fyi-vitc.cloudfunctions.net//api/article/imageUpload",
-        queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
-        data: formData); //{"image": formData}
-    print(response);
-    String a = response.toString();
-    print("LENGTH=");
-    print(a.length);
-  } catch (e) {
-    print(e);
-    print("ERROR");
-    print(formData.toString());
-  }
-}
+// void getHttp() async {
+//   Future<http.Response> postRequest() async {
+//     var url =
+//         'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
+//     var body = jsonEncode({
+//       "title": "hello",
+//       "coverImage":
+//           "https://images.ctfassets.net/hrltx12pl8hq/5596z2BCR9KmT1KeRBrOQa/4070fd4e2f1a13f71c2c46afeb18e41c/shutterstock_451077043-hero1.jpg?fit=fill&w=800&h=400",
+//       "article": [
+//         {"type": "text", "content": "heyyyyy"},
+//         {"type": "text", "content": "heyyyyy"}
+//       ]
+//     });
+//
+//     print("Body: " + body);
+//
+//     http
+//         .post(url, headers: {"x-auth-token": token}, body: body)
+//         .then((http.Response response) {
+//       print("Response status: ${response.statusCode}");
+//       print("Response body: ${response.contentLength}");
+//       print(response.headers);
+//       print(response.request);
+//     });
+//   }
+// }
 
 getImageGallery() async {
   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-  _image = imageFile;
 }
 
 
+
 class _MyHomePageState extends State<MyHomePage> {
-
-  // GlobalKey<HtmlEditorState> keyEditor = GlobalKey();
-  // GlobalKey<HtmlEditorState> keyEditor2 = GlobalKey();
-  // List<GlobalKey<HtmlEditorState>> keyEditor0 =
-  // new List.generate(_count, (int i) => new GlobalKey());
-
   List<Widget> list = new List();
 
   String result = "";
-
 
   @override
   void initState() {
@@ -81,11 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Create Content"),
@@ -112,15 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
                   ),
 
-              // new Container(
-              //   child: Container(
-              //     child: HtmlEditor(
-              //       hint: "Your text here...",
-              //       key: keyEditor1[1],
-              //       height: 300,
-              //     ),
-              //   ),
-              // ),
+                  // new Container(
+                  //   child: Container(
+                  //     child: HtmlEditor(
+                  //       hint: "Your text here...",
+                  //       key: keyEditor1[1],
+                  //       height: 300,
+                  //     ),
+                  //   ),
+                  // ),
 
 //                  input_tile(keyEditor: keyEditor1[1]),
                   // input_tile(keyEditor: keyEditor1[2]),
@@ -159,16 +146,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               setState(() {
                                 // list.add( input_tile(index: list.length,));
-                                list.add( new Container(
-                                  child: Container(
-                                    child: HtmlEditor(
-                                      showBottomToolbar:false,
-                                      hint: "Your text here...<br> Paragraph ${list.length+1}",
-                                      key: keyEditor1[list.length+1],
-                                      height: 300,
+                                list.add(
+                                  new Container(
+                                    child: Container(
+                                      child: HtmlEditor(
+                                        showBottomToolbar: false,
+                                        hint:
+                                            "Your text here...<br> Paragraph ${list.length + 1}",
+                                        key: keyEditor1[list.length + 1],
+                                        height: 300,
+                                      ),
                                     ),
                                   ),
-                                ),);
+                                );
                                 print("number==== ${list.length}");
                                 print("${keyEditor1[1]}");
                               });
@@ -184,15 +174,18 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               setState(() {
                                 // list.add( input_tile(index: list.length,));
-                                list.add( new Container(
-                                  child: Container(
-                                    child: HtmlEditor(
-                                      hint: "ADD IMAGE HERE... ""<br><b>CLICK 'Image from device'</b> in bottom panel to add image from gallery or camera <br> <b>CLICK image icon</b> from top bar for embedding URLs  ",
-                                      key: keyEditor1[list.length+1],
-                                      height: 300,
+                                list.add(
+                                  new Container(
+                                    child: Container(
+                                      child: HtmlEditor(
+                                        hint: "ADD IMAGE HERE... "
+                                            "<br><b>CLICK 'Image from device'</b> in bottom panel to add image from gallery or camera <br> <b>CLICK image icon</b> from top bar for embedding URLs  ",
+                                        key: keyEditor1[list.length + 1],
+                                        height: 300,
+                                      ),
                                     ),
                                   ),
-                                ),);
+                                );
                                 print("number number==== ${list.length}");
                                 print("${keyEditor1[1]}");
                               });
@@ -206,8 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.blueGrey,
                         onPressed: () {
                           list.removeLast();
-                          setState(() {
-                          });
+                          setState(() {});
                         },
                         child: Text("REMOVE Recent TEXT/IMAGE",
                             style: TextStyle(color: Colors.white)),
@@ -259,21 +251,22 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 40,
                           color: Colors.lightGreenAccent.shade700,
                           onPressed: () async {
-                            // final txt =
-                            //     await keyEditor1[1].currentState.getText();
                             for (int j = 1; j <= list.length; j++) {
-                              print("COUNT: ${list.length}");
-                              var printo =
+                              var currentStateText =
                                   await keyEditor1[j].currentState.getText();
-                              print("PRINTTEXT$j :$printo");
+                              var printo = currentStateText;
+                              arrayData[j] = currentStateText;
+                              majorSend=[arrayData,list.length];
                             }
-                            // var printo =
-                            // await keyEditor1[1].currentState.getText();
-                            setState((){
-                              // result = txt;
-                              // print("LENGTH=${result.length}");
-                              // print("result=$result");
-                              // Navigator.pop(context, result);
+                            setState(() {
+                              // getHttp();
+                              Navigator.pop(context,majorSend );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => MyCustomForm(list.length,arrayData),
+                              //   ),
+                              // );
                             });
                           },
                           child: Text(
@@ -312,29 +305,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class imgshow extends StatelessWidget {
-  const imgshow({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      width: 70,
-      child: _imageList[_countimg] == null
-          ? Text('No Images Selected')
-          : Image.file(_image),
-    );
-  }
-}
-
 class input_tile extends StatelessWidget {
-  const input_tile({
-    Key key,
-    // @required this.keyEditor,
-    @required this.index
-  }) : super(key: key);
+  const input_tile(
+      {Key key,
+      // @required this.keyEditor,
+      @required this.index})
+      : super(key: key);
 
   // final GlobalKey<HtmlEditorState> keyEditor;
   // List<GlobalKey<HtmlEditorState>> keyEditor=

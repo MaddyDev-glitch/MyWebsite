@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
-import 'dart:io';
 import 'texty.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:flutter/src/widgets/container.dart';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+
+const String submitUrl =
+    'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
+int count;
+var coverImgUrl;
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -20,9 +24,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   Future<File> imageFile;
-  TextEditingController myContent;
+  // TextEditingController myContent;
   TextEditingController myTitle;
-  String Htmldata;
+  List<String> Htmldata;
 
   pickImageFromGallery(ImageSource source) {
     setState(() {
@@ -30,19 +34,98 @@ class _MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
-  _MyHomePage(BuildContext context) async {
-    final data = await Navigator.push(
+  _MyHomePage(BuildContext context) async {// arrayData contains the array of objects STARTS FROM 0       count is length
+    final List data = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MyHomePage()),
     );
-    Htmldata = data;
+    count = data[1];
+    List temp=data[0];
+    print("COUNT home page=$count");
+    List<String> arrayData =[];
+    for (int j = 1; j <= count; j++) {
+      // Htmldata[j] = data[j];
+      print("SUCCESS my home page");
+      print(temp[j]);
+      // arrayData[j - 1] = data[0][j];
+      arrayData.add(temp[j]);
+      print("REGULAR CHECK ==${arrayData.toString()}");
+      // print("arraydata=${arrayData[j-1]}");
+    }
+  }
+
+  Future<void> gethttp() async {
+    var dio = Dio();
+    var img = await imageFile;
+    print({img.path});
+    print(img);
+    String fileName = img.path.split('/').last;
+    print(fileName);
+    try {
+      formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(img.path, filename: fileName),
+      });
+      Response response = await dio.post(
+          "https://us-central1-fyi-vitc.cloudfunctions.net//api/article/imageUpload",
+          queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
+          data: formData); //{"image": formData}
+      print("GETHHTTP fucntion print -> $response");
+      coverImgUrl = response;
+    } catch (e) {
+      print(e);
+      print("ERROR");
+    }
+  }
+
+  // void sendArticle()
+  // {
+  //   Map map = {
+  //     "title": myTitle.value,
+  //     "coverImage": coverImgUrl.toString(),
+  //     "article": arrayData
+  //   };
+  //
+  //   print(apiRequest(submitUrl, map));
+  // }
+  //
+  // Future<String> apiRequest(String url, Map jsonMap) async {
+  //   HttpClient httpClient = new HttpClient();
+  //   HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+  //   request.headers.set('content-type', 'application/json');
+  //   request.add(utf8.encode(json.encode(jsonMap)));
+  //   HttpClientResponse response = await request.close();
+  //   print(response.statusCode);
+  //   String reply = await response.transform(utf8.decoder).join();
+  //   httpClient.close();
+  //   return reply;
+  // }
+  Future<http.Response> postRequest() async {
+
+    var url = submitUrl;
+    Map data = {
+      "title": myTitle.text,
+      "coverImage": coverImgUrl.toString(),
+      "article": arrayData   //TODO:pass article as ARRAY OF JSON objects "type":text/image  "content":................
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+
+    var response = await http.post(url,
+        headers: {"x-auth-token": token, 'Content-Type': 'application/json'},
+        body: body);
+    print("${response.statusCode}");
+    print("${response.body}");
+    print("ARRAY data");
+    print(arrayData);
+    // return response;
+
   }
 
   @override
   void initState() {
     super.initState();
     myTitle = new TextEditingController(text: null);
-    myContent = new TextEditingController(text: null);
+    // myContent = new TextEditingController(text: null);
   }
 
   Widget showImage() {
@@ -101,7 +184,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    myContent.dispose();
+    // myContent.dispose();
     myTitle.dispose();
     super.dispose();
   }
@@ -121,12 +204,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
               child: RaisedButton(
                 child: Text("Submit"),
                 onPressed: () {
-                  print("my=====${myTitle.text}");
-                  print("SUCCESS============ $Htmldata");
-                  // if (myTitle == "" || myContent == "") {
-                  //   _showcontent();
-                  //
-                  // }
+                  print("title=====${myTitle.text}");
+                  print("SUCCESS============");
+                  postRequest();
                 },
               ),
             ),
@@ -156,6 +236,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   child: Text("Select Image from Gallery"),
                   onPressed: () {
                     pickImageFromGallery(ImageSource.gallery);
+                    gethttp();
                   },
                 ),
               ],

@@ -15,13 +15,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FYI Mobile App',
-      home: MyHomePage(),
+      home: MyCustomForm(),
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
-        // '/c': (BuildContext context) => zefyr(),
         '/d': (BuildContext context) => MyHomePage(),
-      }, //CHANGE TESTER  1. MyCustomForm() 2.ImgSlide()  3.zefyr()
+      }, //CHANGE TESTER  1. MyCustomForm() 2.ImgSlide()
     );
   }
 }
