@@ -1,4 +1,5 @@
 library html_editor;
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,7 @@ import 'package:html_editor/pick_image.dart';
 import 'package:path/path.dart' as p;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
@@ -34,13 +36,13 @@ class HtmlEditor extends StatefulWidget {
 
   HtmlEditor(
       {Key key,
-        this.value,
-        this.height = 380,
-        this.decoration,
-        this.useBottomSheet = true,
-        this.widthImage = "100%",
-        this.showBottomToolbar = true,
-        this.hint})
+      this.value,
+      this.height = 380,
+      this.decoration,
+      this.useBottomSheet = true,
+      this.widthImage = "100%",
+      this.showBottomToolbar = true,
+      this.hint})
       : super(key: key);
 
   @override
@@ -64,21 +66,23 @@ class HtmlEditorState extends State<HtmlEditor> {
   }
 
   postTest(file) async {
-    print("===============================================================================================================================\n");
+    print(
+        "===============================================================================================================================\n");
 
     final uri = 'https://us-central1-fyi-vitc.cloudfunctions.net/';
     var map = new Map<String, dynamic>();
-    var b=file.readAsBytesSync();
+    var b = file.readAsBytesSync();
     // map['image'] = b;
     var requestBody = {
-      'image':b,
+      'image': b,
     };
 
     http.Response response = await http.post(
       uri,
       body: json.encode(requestBody),
     );
-    print("===============================================================================================================================\n");
+    print(
+        "===============================================================================================================================\n");
     print(response.body);
   }
 
@@ -113,7 +117,7 @@ class HtmlEditorState extends State<HtmlEditor> {
           queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
           data: formData); //{"image": formData}
       print("GETHHTTP fucntion print -> $response");
-      globresponse=response;
+      globresponse = response;
     } catch (e) {
       print(e);
       print("ERROR");
@@ -171,7 +175,7 @@ class HtmlEditorState extends State<HtmlEditor> {
                 gestureNavigationEnabled: true,
                 gestureRecognizers: [
                   Factory(
-                          () => VerticalDragGestureRecognizer()..onUpdate = (_) {}),
+                      () => VerticalDragGestureRecognizer()..onUpdate = (_) {}),
                 ].toSet(),
                 javascriptChannels: <JavascriptChannel>[
                   getTextJavascriptChannel(context)
@@ -190,53 +194,72 @@ class HtmlEditorState extends State<HtmlEditor> {
                 },
               ),
             ),
-            widget.showBottomToolbar ? Divider(): Container(height: 1,),
+            widget.showBottomToolbar
+                ? Divider()
+                : Container(
+                    height: 1,
+                  ),
             widget.showBottomToolbar
                 ? Padding(
-              padding: const EdgeInsets.only(
-                  left: 4.0, right: 4, bottom: 8, top: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  widgetIcon(Icons.image, "Image from device", onKlik: () {
-                    widget.useBottomSheet
-                        ? bottomSheetPickImage(context)
-                        : dialogPickImage(context);
-                  }),
-                ],
-              ),
-            )
+                    padding: const EdgeInsets.only(
+                        left: 4.0, right: 4, bottom: 8, top: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        widgetIcon(Icons.image, "Image from device",
+                            onKlik: () {
+                          widget.useBottomSheet
+                              ? bottomSheetPickImage(context)
+                              : dialogPickImage(context);
+                        }),
+                      ],
+                    ),
+                  )
                 : Padding(
-              padding: const EdgeInsets.only(
-                  left: 4.0, right: 4, bottom: 8, top: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  widgetIcon(Icons.content_copy, "Copy", onKlik: () async {
-                    String data = await getText();
-                    Clipboard.setData(new ClipboardData(text: data));
-                  }),
-                  widgetIcon(Icons.content_paste, "Paste",
-                      onKlik: () async {
-                        ClipboardData data =
-                        await Clipboard.getData(Clipboard.kTextPlain);
+                    padding: const EdgeInsets.only(
+                        left: 4.0, right: 4, bottom: 8, top: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        widgetIcon(Icons.content_copy, "Copy",
+                            onKlik: () async {
+                          String data = await getText();
+                          Clipboard.setData(new ClipboardData(text: data));
+                        }),
+                        Row(
+                          children: [
+                            widgetIcon(Icons.keyboard_arrow_up_outlined, ""),
+                            Text(
+                              "SCROLL BAR",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 17,
+                                  color: Colors.black38),
+                            ),
+                            widgetIcon(Icons.keyboard_arrow_up_outlined, ""),
+                          ],
+                        ),
+                        widgetIcon(Icons.content_paste, "Paste",
+                            onKlik: () async {
+                          ClipboardData data =
+                              await Clipboard.getData(Clipboard.kTextPlain);
 
-                        String txtIsi = data.text
-                            .replaceAll("'", '\\"')
-                            .replaceAll('"', '\\"')
-                            .replaceAll("[", "\\[")
-                            .replaceAll("]", "\\]")
-                            .replaceAll("\n", "<br/>")
-                            .replaceAll("\n\n", "<br/>")
-                            .replaceAll("\r", " ")
-                            .replaceAll('\r\n', " ");
-                        String txt =
-                            "\$('.note-editable').append( '" + txtIsi + "');";
-                        _controller.evaluateJavascript(txt);
-                      }),
-                ],
-              ),
-            )
+                          String txtIsi = data.text
+                              .replaceAll("'", '\\"')
+                              .replaceAll('"', '\\"')
+                              .replaceAll("[", "\\[")
+                              .replaceAll("]", "\\]")
+                              .replaceAll("\n", "<br/>")
+                              .replaceAll("\n\n", "<br/>")
+                              .replaceAll("\r", " ")
+                              .replaceAll('\r\n', " ");
+                          String txt =
+                              "\$('.note-editable').append( '" + txtIsi + "');";
+                          _controller.evaluateJavascript(txt);
+                        }),
+                      ],
+                    ),
+                  )
           ],
         ),
       ),
@@ -346,11 +369,11 @@ class HtmlEditorState extends State<HtmlEditor> {
               child: PickImage(
                   color: Colors.black45,
                   callbackFile: (file) async {
-                    String filename = p.basename(file.path);List<int> imageBytes = await file.readAsBytes();
+                    String filename = p.basename(file.path);
+                    List<int> imageBytes = await file.readAsBytes();
                     print("--------------------\n");
                     print(imageBytes);
                     print("--------------------\n");
-
 
                     // String basedata = base64Encode(imageBytes);
                     String base64Image =
@@ -377,28 +400,26 @@ class HtmlEditorState extends State<HtmlEditor> {
           return StatefulBuilder(builder: (BuildContext context, setStatex) {
             return SingleChildScrollView(
                 child: Container(
-                  height: 140,
-                  width: double.infinity,
-                  child: PickImage(callbackFile: (file) async {
-                    print("INSIDE");
-                    _image=file;
-                    await getHttp();
-                    print("============================");
-                    print(globresponse);
-                    String filename = p.basename(file.path);
-                    String Imagetag = "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
-                    String txt =
-                        "\$('.note-editable').append( '" + Imagetag + "');";
-                    _controller.evaluateJavascript(txt);
-                  }),
-                ));
+              height: 140,
+              width: double.infinity,
+              child: PickImage(callbackFile: (file) async {
+                print("INSIDE");
+                _image = file;
+                await getHttp();
+                print("============================");
+                print(globresponse);
+                String filename = p.basename(file.path);
+                String Imagetag =
+                    "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
+                String txt =
+                    "\$('.note-editable').append( '" + Imagetag + "');";
+                _controller.evaluateJavascript(txt);
+              }),
+            ));
           });
         });
   }
 }
-
-
-
 
 // library html_editor;
 //

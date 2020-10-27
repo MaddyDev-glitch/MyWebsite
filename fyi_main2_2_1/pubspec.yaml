@@ -43,6 +43,7 @@ dev_dependencies:
   dio: ^3.0.10
   dio_flutter_transformer: ^3.0.2
   rich_edit: ^0.1.1
+  font_awesome_flutter: ^8.10.0
 
   #  cloud_firestore: ^0.14.1+2
   #  firebase_core: ^0.5.0

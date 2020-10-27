@@ -25,6 +25,8 @@ class Tag {
       };
 }
 
+
+
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
@@ -127,8 +129,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
             snapshot.data != null) {
           return Image.file(
             snapshot.data,
-            width: 300,
-            height: 300,
+            width: 200,
+            height: 200,
           );
         } else if (snapshot.error != null) {
           return const Text(
@@ -240,6 +242,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Retrieve Text Input'),
       ),
@@ -274,7 +277,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
               )),
           Container(
-              margin: EdgeInsets.all(12),
+              margin: EdgeInsets.only(top: 12,left: 12,right: 12,bottom: 5),
               child: TextField(
                 controller: myTitle,
                 decoration: InputDecoration(
@@ -304,20 +307,17 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 margin: EdgeInsets.all(12),
                 height: 70.0,
                 width: double.infinity,
-                color: Colors.lightBlue,
-                // child: TextField(
-                //   controller: myContent,
-                //   maxLines: null,
-                //   decoration: InputDecoration(
-                //     hintText: "Enter Content",
-                //     fillColor: Colors.grey[300],
-                //     filled: true,
-                //   ),
-                // ),
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue,
+                ),
                 child: RaisedButton(
-                    child: Text("Write Content"),
+                    color: Colors.blue.shade400,
+                    child: Text("Write Content",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 30)),
                     onPressed: () {
-                      // Navigator.pushNamed(context, '/d');
                       _MyHomePage(context);
                     }),
               ),
