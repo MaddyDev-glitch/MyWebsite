@@ -243,17 +243,6 @@ class HtmlEditorState extends State<HtmlEditor> {
     );
   }
 
-
-  // Container imagecont(BuildContext context) {
-  //   return Container(
-  //                 child: widgetIcon(Icons.image, "Image from device", onKlik: () {
-  //                   widget.useBottomSheet
-  //                       ? bottomSheetPickImage(context)
-  //                       : dialogPickImage(context);
-  //                 }),
-  //               );
-  // }
-
   JavascriptChannel getTextJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
         name: 'GetTextSummernote',
@@ -397,12 +386,6 @@ class HtmlEditorState extends State<HtmlEditor> {
                     print("============================");
                     print(globresponse);
                     String filename = p.basename(file.path);
-                    // List imageBytes = await file.readAsBytesSync();
-                    // print("--------------------\n");
-                    // print(imageBytes.length);
-                    // print("--------------------\n");
-                    // String basedata = await base64Encode(imageBytes);
-                    // postTest(file);
                     String Imagetag = "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
                     String txt =
                         "\$('.note-editable').append( '" + Imagetag + "');";
@@ -413,21 +396,6 @@ class HtmlEditorState extends State<HtmlEditor> {
         });
   }
 }
-
-// <img width=50%
-//     src=https://storage.googleapis.com/download/storage/v1/b/fyi-vitc.appspot.com/o/article%2F3c389a6e-7e26-4c0f-8cba-19c8ce135fe8.jpg?generation=1602906826001112&alt=media
-// "${basedata}\" data-filename=\"$filename\">
-
-//String Imagetag = " < img width=${widget.widthImage}src= $globresponse data-filename=$filename> ";
-//                 String txt =
-//                     "\$('.note-editable').append( '" + Imagetag + "');";
-
-// String base64Image = "<img width=\"${widget.widthImage}\" "
-//     "src=\"data:image/png;base64, "
-//     "${basedata}\" data-filename=\"$filename\">";
-// String txt =
-//     "\$('.note-editable').append( '" + base64Image + "');";
-// _controller.evaluateJavascript(txt);
 
 
 

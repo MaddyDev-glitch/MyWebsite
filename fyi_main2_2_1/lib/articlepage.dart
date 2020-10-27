@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
@@ -13,12 +12,6 @@ const String submitUrl =
 int count;
 var coverImgUrl;
 String jsonTags;
-
-class packet {
-  String type;
-  String content;
-  packet(@required this.type, @required this.content);
-}
 
 class Tag {
   String type;
@@ -38,13 +31,10 @@ class MyCustomForm extends StatefulWidget {
   _MyCustomFormState createState() => _MyCustomFormState();
 }
 
-// Define a corresponding State class.
-// This class holds the data related to the Form.
 class _MyCustomFormState extends State<MyCustomForm> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   Future<File> imageFile;
-  // TextEditingController myContent;
   TextEditingController myTitle;
   List<String> Htmldata;
 
@@ -66,15 +56,11 @@ class _MyCustomFormState extends State<MyCustomForm> {
     List<Tag> tags = [];
     print("COUNT home page=$count");
     List<String> arrayData = [];
-    List<packet> packetSendData = [];
     for (int j = 1; j <= count; j++) {
       print("SUCCESS my home page");
-      // print(temp[j]);
       arrayData.add(temp[j]);
       tags.add(Tag(typeArray[j - 1], temp[j]));
       print("REGULAR CHECK ==${arrayData.toString()}");
-      packetSendData.add(packet("text", "hello"));
-      // print("arraydata=${arrayData[j-1]}");
     }
 
     // tags.add(Tag('tagA', 3));
@@ -108,28 +94,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
     }
   }
 
-  // void sendArticle()
-  // {
-  //   Map map = {
-  //     "title": myTitle.value,
-  //     "coverImage": coverImgUrl.toString(),
-  //     "article": arrayData
-  //   };
-  //
-  //   print(apiRequest(submitUrl, map));
-  // }
-  //
-  // Future<String> apiRequest(String url, Map jsonMap) async {
-  //   HttpClient httpClient = new HttpClient();
-  //   HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
-  //   request.headers.set('content-type', 'application/json');
-  //   request.add(utf8.encode(json.encode(jsonMap)));
-  //   HttpClientResponse response = await request.close();
-  //   print(response.statusCode);
-  //   String reply = await response.transform(utf8.decoder).join();
-  //   httpClient.close();
-  //   return reply;
-  // }
   Future<http.Response> postRequest() async {
     var url = submitUrl;
     Map data = {
@@ -181,23 +145,80 @@ class _MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  void _showcontent() {
+  void _showAlert() {
     showDialog(
       context: context, barrierDismissible: false, // user must tap button!
 
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: new Text('You clicked on'),
+          title: new Text('Create Article'),
           content: new SingleChildScrollView(
             child: new ListBody(
               children: [
-                new Text('This is a Dialog Box. Click OK to Close.'),
+                new Text(
+                  'Oops :/',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  'Looks like you forgot to give your article a Title and Content',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 20,
+                ),
+                new Text('Enter Title and content of your article to Submit.'),
               ],
             ),
           ),
           actions: [
             new FlatButton(
-              child: new Text('Ok'),
+              child: new Text('Got It'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showConfirm() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Create Article'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: [
+                new Text(
+                  'Yaay!',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue.shade700),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text('Your article has been successfully submitted'),
+              ],
+            ),
+          ),
+          actions: [
+            new FlatButton(
+              child: new Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -230,10 +251,18 @@ class _MyCustomFormState extends State<MyCustomForm> {
               width: double.infinity,
               child: RaisedButton(
                 child: Text("Submit"),
-                onPressed: () {
-                  print("title=====${myTitle.text}");
-                  print("SUCCESS============");
-                  postRequest();
+                onPressed: () async {
+                  if (myTitle.text != "" && jsonTags != null) {
+                    print("SUCCESS============");
+                    await postRequest();
+                    setState(() {
+                      myTitle.clear();
+                      imageFile = null;
+                    });
+                    _showConfirm();
+                  } else {
+                    _showAlert();
+                  }
                 },
               ),
             ),
@@ -296,24 +325,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
           ),
         ],
       ),
-//      floatingActionButton: FloatingActionButton(
-//        // When the user presses the button, show an alert dialog containing
-//        // the text that the user has entered into the text field.
-//        onPressed: () {
-//          return showDialog(
-//            context: context,
-//            builder: (context) {
-//              return AlertDialog(
-//                // Retrieve the text the that user has entered by using the
-//                // TextEditingController.
-//                content: Text(myTitle.text),
-//              );
-//            },
-//          );
-//        },
-//        tooltip: 'Show me the value!',
-//        child: Icon(Icons.text_fields),
-//      ),
     );
   }
 }

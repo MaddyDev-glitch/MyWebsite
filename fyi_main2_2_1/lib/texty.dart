@@ -1,14 +1,8 @@
-import 'dart:convert';
 import 'dart:core';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fyi_main2_2_1/articlepage.dart';
 import 'html_editor.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:html_editor/pick_image.dart';
-
 import 'package:flutter/foundation.dart';
 
 List majorSend = [];
@@ -25,33 +19,6 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
-// void getHttp() async {
-//   Future<http.Response> postRequest() async {
-//     var url =
-//         'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
-//     var body = jsonEncode({
-//       "title": "hello",
-//       "coverImage":
-//           "https://images.ctfassets.net/hrltx12pl8hq/5596z2BCR9KmT1KeRBrOQa/4070fd4e2f1a13f71c2c46afeb18e41c/shutterstock_451077043-hero1.jpg?fit=fill&w=800&h=400",
-//       "article": [
-//         {"type": "text", "content": "heyyyyy"},
-//         {"type": "text", "content": "heyyyyy"}
-//       ]
-//     });
-//
-//     print("Body: " + body);
-//
-//     http
-//         .post(url, headers: {"x-auth-token": token}, body: body)
-//         .then((http.Response response) {
-//       print("Response status: ${response.statusCode}");
-//       print("Response body: ${response.contentLength}");
-//       print(response.headers);
-//       print(response.request);
-//     });
-//   }
-// }
 
 getImageGallery() async {
   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -77,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Create Content"),
         elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue.shade50,
       body: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Stack(
@@ -89,6 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 600,
                     child: Container(
+                      decoration: BoxDecoration(
+                        // color: Colors.blueGrey
+                      ),
                         child: ListView.builder(
                       itemBuilder: (context, index) {
                         Widget widget = list.elementAt(index);
@@ -295,21 +265,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-    // This trailing comma makes auto-formatting nicer for build methods.
-    // );
   }
 }
 
 class input_tile extends StatelessWidget {
-  const input_tile(
-      {Key key,
-      // @required this.keyEditor,
-      @required this.index})
-      : super(key: key);
-
-  // final GlobalKey<HtmlEditorState> keyEditor;
-  // List<GlobalKey<HtmlEditorState>> keyEditor=
-  // List<GlobalKey<HtmlEditorState>>(200);
+  const input_tile({Key key, @required this.index}) : super(key: key);
   final int index;
 
   @override
@@ -326,44 +286,3 @@ class input_tile extends StatelessWidget {
     );
   }
 }
-
-// class input_tile extends StatelessWidget {
-//   const input_tile({
-//     Key key,
-//     @required this.keyEditor,
-//   }) : super(key: key);
-//
-//   final GlobalKey<HtmlEditorState> keyEditor;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         Container(
-//           child: HtmlEditor(
-//             hint: "Your text here...",
-//             //value: "text content initial, if any",
-//             // value: "hey",
-//             key: keyEditor,
-//             height: 300,
-//           ),
-//         ),
-//         SizedBox(
-//           height: 30,
-//           width: double.infinity,
-//           child: Container(
-//             color: Colors.black87,
-//             child: Center(
-//                 child: Text(
-//                   "^^^         Scroll bar         ^^^",
-//                   style: TextStyle(
-//                       color: Colors.white,
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.w100),
-//                 )),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
