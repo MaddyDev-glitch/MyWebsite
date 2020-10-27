@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
@@ -11,6 +12,25 @@ const String submitUrl =
     'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
 int count;
 var coverImgUrl;
+String jsonTags;
+
+class packet {
+  String type;
+  String content;
+  packet(@required this.type, @required this.content);
+}
+
+class Tag {
+  String type;
+  String content;
+
+  Tag(this.type, this.content);
+
+  Map toJson() => {
+        'type': type,
+        'content': content,
+      };
+}
 
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -34,24 +54,35 @@ class _MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
-  _MyHomePage(BuildContext context) async {// arrayData contains the array of objects STARTS FROM 0       count is length
+  _MyHomePage(BuildContext context) async {
+    // arrayData contains the array of objects STARTS FROM 0       count is length
     final List data = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MyHomePage()),
     );
     count = data[1];
-    List temp=data[0];
+    List temp = data[0];
+    List typeArray = data[2];
+    List<Tag> tags = [];
     print("COUNT home page=$count");
-    List<String> arrayData =[];
+    List<String> arrayData = [];
+    List<packet> packetSendData = [];
     for (int j = 1; j <= count; j++) {
-      // Htmldata[j] = data[j];
       print("SUCCESS my home page");
-      print(temp[j]);
-      // arrayData[j - 1] = data[0][j];
+      // print(temp[j]);
       arrayData.add(temp[j]);
+      tags.add(Tag(typeArray[j - 1], temp[j]));
       print("REGULAR CHECK ==${arrayData.toString()}");
+      packetSendData.add(packet("text", "hello"));
       // print("arraydata=${arrayData[j-1]}");
     }
+
+    // tags.add(Tag('tagA', 3));
+    // tags.add(Tag('tagA', 3));
+    // tags.add(Tag('tagA', 3));
+    jsonTags = jsonEncode(tags);
+    print("jsonTags");
+    print(jsonTags);
   }
 
   Future<void> gethttp() async {
@@ -100,12 +131,11 @@ class _MyCustomFormState extends State<MyCustomForm> {
   //   return reply;
   // }
   Future<http.Response> postRequest() async {
-
     var url = submitUrl;
     Map data = {
       "title": myTitle.text,
       "coverImage": coverImgUrl.toString(),
-      "article": arrayData   //TODO:pass article as ARRAY OF JSON objects "type":text/image  "content":................
+      "article": jsonTags
     };
     //encode Map to JSON
     var body = json.encode(data);
@@ -115,10 +145,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         body: body);
     print("${response.statusCode}");
     print("${response.body}");
-    print("ARRAY data");
-    print(arrayData);
     // return response;
-
   }
 
   @override

@@ -11,7 +11,8 @@ import 'package:html_editor/pick_image.dart';
 
 import 'package:flutter/foundation.dart';
 
-List majorSend=[];
+List majorSend = [];
+List type = [];
 List<GlobalKey<HtmlEditorState>> keyEditor1 =
     List<GlobalKey<HtmlEditorState>>(200);
 int i = 1;
@@ -55,8 +56,6 @@ class MyHomePage extends StatefulWidget {
 getImageGallery() async {
   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 }
-
-
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> list = new List();
@@ -146,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               setState(() {
                                 // list.add( input_tile(index: list.length,));
+                                type.add("text");
                                 list.add(
                                   new Container(
                                     child: Container(
@@ -174,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               setState(() {
                                 // list.add( input_tile(index: list.length,));
+                                type.add("image");
                                 list.add(
                                   new Container(
                                     child: Container(
@@ -199,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.blueGrey,
                         onPressed: () {
                           list.removeLast();
+                          type.removeLast();
                           setState(() {});
                         },
                         child: Text("REMOVE Recent TEXT/IMAGE",
@@ -256,17 +258,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   await keyEditor1[j].currentState.getText();
                               var printo = currentStateText;
                               arrayData[j] = currentStateText;
-                              majorSend=[arrayData,list.length];
+                              majorSend = [arrayData, list.length, type];
                             }
                             setState(() {
-                              // getHttp();
-                              Navigator.pop(context,majorSend );
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => MyCustomForm(list.length,arrayData),
-                              //   ),
-                              // );
+                              Navigator.pop(context, majorSend);
                             });
                           },
                           child: Text(
