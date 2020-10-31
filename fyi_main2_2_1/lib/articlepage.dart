@@ -11,7 +11,8 @@ const String submitUrl =
     'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
 int count;
 var coverImgUrl;
-String jsonTags;
+// String jsonTags;
+List<dynamic> arrays=[];
 
 class Tag {
   String type;
@@ -26,7 +27,36 @@ class Tag {
 }
 
 
+showAlertDialog(BuildContext context) {
 
+  // set up the buttons
+  Widget cancelButton = FlatButton(
+    child: Text("Cancel"),
+    onPressed:  () {},
+  );
+  Widget continueButton = FlatButton(
+    child: Text("Continue"),
+    onPressed:  () {},
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("RESET"),
+    content: Text("Do You really want to reset?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
@@ -57,20 +87,20 @@ class _MyCustomFormState extends State<MyCustomForm> {
     List typeArray = data[2];
     List<Tag> tags = [];
     print("COUNT home page=$count");
-    List<String> arrayData = [];
+    // List<String> arrayData = [];
     for (int j = 1; j <= count; j++) {
       print("SUCCESS my home page");
-      arrayData.add(temp[j]);
+      // arrayData.add(temp[j]);
       tags.add(Tag(typeArray[j - 1], temp[j]));
-      print("REGULAR CHECK ==${arrayData.toString()}");
-    }
+      // print("REGULAR CHECK ==${arrayData.toString()}");
 
-    // tags.add(Tag('tagA', 3));
-    // tags.add(Tag('tagA', 3));
-    // tags.add(Tag('tagA', 3));
-    jsonTags = jsonEncode(tags);
-    print("jsonTags");
-    print(jsonTags);
+      Tag tempTag = Tag(typeArray[j - 1], temp[j]);
+      Map jsonInsert = tempTag.toJson();
+
+      arrays.add(jsonInsert);
+    }
+    print("arrays");
+      print(arrays);
   }
 
   Future<void> gethttp() async {
@@ -97,13 +127,15 @@ class _MyCustomFormState extends State<MyCustomForm> {
   }
 
   Future<http.Response> postRequest() async {
+    // List xyz=[];
+    // xyz.add(jsonTags);
     var url = submitUrl;
     Map data = {
       "title": myTitle.text,
       "coverImage": coverImgUrl.toString(),
-      "article": jsonTags
+      "article": arrays
     };
-    //encode Map to JSON
+    // encode Map to JSON
     var body = json.encode(data);
 
     var response = await http.post(url,
@@ -111,7 +143,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         body: body);
     print("${response.statusCode}");
     print("${response.body}");
-    // return response;
+    return response;
   }
 
   @override
@@ -255,7 +287,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
               child: RaisedButton(
                 child: Text("Submit"),
                 onPressed: () async {
-                  if (myTitle.text != "" && jsonTags != null) {
+                  if (myTitle.text != ""&& arrays.length!=0)
+                  {
                     print("SUCCESS============");
                     await postRequest();
                     setState(() {
