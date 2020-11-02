@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fyi_main2_2_1/imageslides.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
@@ -77,15 +78,28 @@ class _MyCustomFormState extends State<MyCustomForm> {
   }
 
   _MyHomePage(BuildContext context) async {
-    // arrayData contains the array of objects STARTS FROM 0       count is length
+    // temp contains the array of objects STARTS FROM 0       count is length        typeArray is type of data
     final List data = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MyHomePage()),
     );
-    count = data[1];
-    List temp = data[0];
+    count = data[1];  //count
+    List temp = data[0];  //
     List typeArray = data[2];
     List<Tag> tags = [];
+
+
+    for(int i=1;i<=count;i++)
+      {
+        if(typeArray[i-1]=='image')
+          {print('print');
+            print(temp[i].toString().substring(11));
+            temp[i]=temp[i].toString().substring(11);
+          temp[i]= temp[i].replaceAll("amp;", "");
+
+          print(temp[i]);
+          }
+      }
     print("COUNT home page=$count");
     // List<String> arrayData = [];
     for (int j = 1; j <= count; j++) {
@@ -136,6 +150,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
       "article": arrays
     };
     // encode Map to JSON
+    //TODO:here
     var body = json.encode(data);
 
     var response = await http.post(url,
@@ -354,6 +369,29 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       _MyHomePage(context);
                     }),
               ),
+              // Container(
+              //   margin: EdgeInsets.all(12),
+              //   height: 40.0,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     color: Colors.yellow.shade700,
+              //   ),
+              //   child: RaisedButton(
+              //       color: Colors.yellow.shade700,
+              //       child: Text("Image Carousel [testing][working]",
+              //           style: TextStyle(
+              //               color: Colors.white,
+              //               fontWeight: FontWeight.w300,
+              //               fontSize: 30)),
+              //       onPressed: () {
+              //         setState(() {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(builder: (context) => ImgSlide()),
+              //           );
+              //         });
+              //       }),
+              // ),
             ],
           ),
         ],

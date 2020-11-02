@@ -272,6 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               "<br><b>CLICK 'Image from device'</b> in bottom panel to add image from gallery or camera <br> <b>CLICK image icon</b> from top bar for embedding URLs  ",
                                           key: keyEditor1[list.length + 1],
                                           height: 300,
+
                                         ),
                                       ),
                                     ),

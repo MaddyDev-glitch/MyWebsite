@@ -65,27 +65,6 @@ class HtmlEditorState extends State<HtmlEditor> {
     super.initState();
   }
 
-  postTest(file) async {
-    print(
-        "===============================================================================================================================\n");
-
-    final uri = 'https://us-central1-fyi-vitc.cloudfunctions.net/';
-    var map = new Map<String, dynamic>();
-    var b = file.readAsBytesSync();
-    // map['image'] = b;
-    var requestBody = {
-      'image': b,
-    };
-
-    http.Response response = await http.post(
-      uri,
-      body: json.encode(requestBody),
-    );
-    print(
-        "===============================================================================================================================\n");
-    print(response.body);
-  }
-
   initServer() {
     localServer = LocalServer(port);
     localServer.start(handleRequest);
@@ -397,7 +376,7 @@ class HtmlEditorState extends State<HtmlEditor> {
         backgroundColor: Colors.white,
         context: context,
         builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (BuildContext context, setStatex) {
+          return StatefulBuilder(builder: (BuildContext context, setState) {
             return SingleChildScrollView(
                 child: Container(
               height: 140,
@@ -409,8 +388,9 @@ class HtmlEditorState extends State<HtmlEditor> {
                 print("============================");
                 print(globresponse);
                 String filename = p.basename(file.path);
-                String Imagetag =
-                    "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
+                // String Imagetag =
+                //     "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
+                String Imagetag = globresponse.toString();
                 String txt =
                     "\$('.note-editable').append( '" + Imagetag + "');";
                 _controller.evaluateJavascript(txt);
