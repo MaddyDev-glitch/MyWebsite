@@ -17,17 +17,19 @@ var coverImgUrl;
 // String jsonTags;
 List<dynamic> arrays = [];
 double coverHeight = 350;
-double editorHeight =0;
+double editorHeight = 0;
 
 List majorSend = [];
 List type = [];
 List<GlobalKey<HtmlEditorState>> keyEditor1 =
-List<GlobalKey<HtmlEditorState>>(200);
+    List<GlobalKey<HtmlEditorState>>(200);
+List<String> closeChecker = List<String>(200);
 int i = 1;
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
 FormData formData;
 List<String> arrayData = List<String>(200);
+String cls = "X";
 
 class Tag {
   String type;
@@ -76,6 +78,7 @@ class MyCustomForm extends StatefulWidget {
   @override
   _MyCustomFormState createState() => _MyCustomFormState();
 }
+
 // getImageGallery() async {
 //   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 // }
@@ -94,7 +97,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
       imageFile = ImagePicker.pickImage(source: source);
     });
   }
-
 
   Future<void> gethttp() async {
     var dio = Dio();
@@ -268,6 +270,138 @@ class _MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
+  void _nullremoveError() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Remove Text/Image'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: [
+                new Text(
+                  'Well... I can\'t do that,',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.yellow.shade800),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  '"You got to create something to destroy..."',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.yellow.shade800),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  'Add Text or Image to remove it',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            new FlatButton(
+              child: new Text('Alright!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _removeConfirm() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Remove Text/Image'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: [
+                new Text(
+                  'Ummm....',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  'You sure about deleting? Its irreversible!',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                Container(
+                    width: 280,
+                    padding: EdgeInsets.all(10.0),
+                    child: TextField(
+                      maxLength: (list.length < 10) ? 1 : 2,
+                      controller: number,
+                      autocorrect: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: 'Box number you wish to remove'),
+                    )),
+                // new Text('Your article has been successfully submitted'),
+              ],
+            ),
+          ),
+          actions: [
+            new FlatButton(
+              child: new Text('Nah, I\'d like to keep it'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                'Delete it!',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.red.shade700),
+              ),
+              onPressed: () {
+                // list.removeLast();
+                // type.removeLast();
+                String num = number.text;
+                int numMinusone = int.parse(num) - 1;
+                print(num);
+                setState(() {
+                  list.removeAt(numMinusone);
+                  type.removeAt(numMinusone);
+                  if (list.length == 0) {
+                    editorHeight = 0;
+                  }
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -276,23 +410,29 @@ class _MyCustomFormState extends State<MyCustomForm> {
     super.dispose();
   }
 
-
+  final number = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     showAlertDialog(BuildContext context) {
       // set up the buttons
       Widget cancelButton = FlatButton(
-        child: Text("Cancel",style: TextStyle(fontSize: 20),),
+        child: Text(
+          "Cancel",
+          style: TextStyle(fontSize: 20),
+        ),
         onPressed: () {
           Navigator.of(context).pop();
         },
       );
       Widget continueButton = FlatButton(
-        child: Text("Continue anyways", style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: Colors.red.shade700),),
+        child: Text(
+          "Continue anyways",
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: Colors.red.shade700),
+        ),
         onPressed: () {
           setState(() {
             for (int i = 1; i <= list.length; i++) {
@@ -350,6 +490,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         },
       );
     }
+
     return Scaffold(
       backgroundColor: Color(0xfff1f1f1),
       resizeToAvoidBottomPadding: false,
@@ -433,7 +574,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                     onPressed: () async {
                       for (int j = 1; j <= list.length; j++) {
                         var currentStateText =
-                        await keyEditor1[j].currentState.getText();
+                            await keyEditor1[j].currentState.getText();
                         var printo = currentStateText;
                         arrayData[j] = currentStateText;
                         majorSend = [arrayData, list.length, type];
@@ -470,7 +611,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                         print("arrays");
                         print(arrays);
                       }
-                      if (myTitle.text != "" ) {//arrays.length != 0
+                      if (myTitle.text != "") {
+                        //arrays.length != 0
                         print("SUCCESS============");
                         await postRequest();
                         setState(() {
@@ -506,7 +648,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   //   ),
                   // ],
                 ),
-                margin: EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 5),
+                margin:
+                    EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 5),
                 child: TextField(
                   controller: myTitle,
                   decoration: InputDecoration(
@@ -540,7 +683,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
             ),
             Column(
               children: <Widget>[
-
                 Scrollbar(
                   child: SingleChildScrollView(
                     child: Column(
@@ -554,7 +696,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
                               decoration: BoxDecoration(
                                 // color: Colors.blueGrey
                                 color: Color(0x3382b7dc),
-
                               ),
                               child: ListView.builder(
                                 itemBuilder: (context, index) {
@@ -574,32 +715,35 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     color: Colors.blueGrey,
                                     onPressed: () {
                                       setState(() {
-                                        editorHeight=500;
+                                        editorHeight = 500;
                                         // list.add( input_tile(index: list.length,));
                                         type.add("text");
                                         list.add(
-                                          new Container(
-                                            child: Container(
-                                              child: HtmlEditor(
-                                                showBottomToolbar: false,
-                                                hint:
-                                                "Your text here...<br> Paragraph ${list.length + 1}",
-                                                key: keyEditor1[list.length + 1],
-                                                height: 300,
+                                          Column(
+                                            children: [
+                                              Container(
+                                                child: HtmlEditor(
+                                                  showBottomToolbar: false,
+                                                  hint:
+                                                      "Your text here...<br> Paragraph ${list.length + 1}",
+                                                  key: keyEditor1[
+                                                      list.length + 1],
+                                                  height: 300,
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                         );
                                         print("number==== ${list.length}");
                                         print("${keyEditor1[1]}");
                                       });
                                     },
-
                                     child: Row(
                                       children: [
                                         widgetIcon(Icons.text_snippet, ""),
                                         Text("ADD TEXT",
-                                            style: TextStyle(color: Colors.white)),
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                       ],
                                     )),
                                 SizedBox(
@@ -609,7 +753,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     color: Colors.blueGrey,
                                     onPressed: () {
                                       setState(() {
-                                        editorHeight=500;
+                                        editorHeight = 500;
                                         // list.add( input_tile(index: list.length,));
                                         type.add("image");
                                         list.add(
@@ -617,13 +761,15 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                             child: Container(
                                               child: HtmlEditor(
                                                 hint: "ADD IMAGE HERE... ",
-                                                key: keyEditor1[list.length + 1],
+                                                key:
+                                                    keyEditor1[list.length + 1],
                                                 height: 100,
                                               ),
                                             ),
                                           ),
                                         );
-                                        print("number number==== ${list.length}");
+                                        print(
+                                            "number number==== ${list.length}");
                                         print("${keyEditor1[1]}");
                                       });
                                     },
@@ -631,7 +777,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                       children: [
                                         widgetIcon(Icons.image, ""),
                                         Text("ADD IMAGE",
-                                            style: TextStyle(color: Colors.white)),
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                       ],
                                     )),
                                 SizedBox(
@@ -650,10 +797,15 @@ class _MyCustomFormState extends State<MyCustomForm> {
                         FlatButton(
                             color: Colors.blueGrey,
                             onPressed: () {
-                              list.removeLast();
-                              type.removeLast();
+                              if (list.length == 0) {
+                                _nullremoveError();
+                              } else {
+                                _removeConfirm();
+                              }
+                              // list.removeLast();
+                              // type.removeLast();
                               setState(() {
-                                if(list.length==0) {
+                                if (list.length == 0) {
                                   editorHeight = 0;
                                 }
                               });
@@ -673,7 +825,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                 color: Colors.redAccent,
                                 onPressed: () {
                                   showAlertDialog(context);
-                                  editorHeight=0;
+                                  editorHeight = 0;
                                 },
                                 child: Text("Reset",
                                     style: TextStyle(
@@ -730,29 +882,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                     ),
                   ),
                 )
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+
                 // Container(
                 //   margin: EdgeInsets.all(12),
                 //   height: 40.0,
@@ -830,4 +960,3 @@ Widget widgetIcon(IconData icon, String title, {OnClik onKlik}) {
     ),
   );
 }
-

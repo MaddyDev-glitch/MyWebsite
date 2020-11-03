@@ -21,6 +21,7 @@ String testfd;
 String url =
     "https://us-central1-fyi-vitc.cloudfunctions.net//api/article/imageUpload";
 FormData formData;
+String close='X';
 var globresponse;
 
 typedef void OnClik();
@@ -203,7 +204,19 @@ class HtmlEditorState extends State<HtmlEditor> {
                                     ? bottomSheetPickImage(context)
                                     : dialogPickImage(context);
                               }),
-                              Text("Image from device",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w400),)
+                              Text("Image from device",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w400),),
+                              // FlatButton(onPressed: (){
+                              //   setState(() {
+                              //     if(close=="X")
+                              //       {
+                              //         close="-";
+                              //
+                              //       }
+                              //     else{
+                              //       close='X';
+                              //     }
+                              //   });
+                              // }, child: Text(close))
                             ],
                           ),
                         ),
@@ -212,7 +225,7 @@ class HtmlEditorState extends State<HtmlEditor> {
                   )
                 : Padding(
                     padding: const EdgeInsets.only(
-                        left: 4.0, right: 4, bottom: 8, top: 2),
+                        left: 4.0, right: 4, bottom: 2, top: 2),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Color(0xff808080),
