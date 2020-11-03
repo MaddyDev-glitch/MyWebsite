@@ -7,13 +7,15 @@ import 'texty.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 const String submitUrl =
     'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
 int count;
 var coverImgUrl;
 // String jsonTags;
-List<dynamic> arrays=[];
+List<dynamic> arrays = [];
+double coverHeight = 350;
 
 class Tag {
   String type;
@@ -27,17 +29,15 @@ class Tag {
       };
 }
 
-
 showAlertDialog(BuildContext context) {
-
   // set up the buttons
   Widget cancelButton = FlatButton(
     child: Text("Cancel"),
-    onPressed:  () {},
+    onPressed: () {},
   );
   Widget continueButton = FlatButton(
     child: Text("Continue"),
-    onPressed:  () {},
+    onPressed: () {},
   );
 
   // set up the AlertDialog
@@ -58,6 +58,7 @@ showAlertDialog(BuildContext context) {
     },
   );
 }
+
 // Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
@@ -83,23 +84,21 @@ class _MyCustomFormState extends State<MyCustomForm> {
       context,
       MaterialPageRoute(builder: (context) => MyHomePage()),
     );
-    count = data[1];  //count
-    List temp = data[0];  //
+    count = data[1]; //count
+    List temp = data[0]; //
     List typeArray = data[2];
     List<Tag> tags = [];
 
+    for (int i = 1; i <= count; i++) {
+      if (typeArray[i - 1] == 'image') {
+        print('print');
+        print(temp[i].toString().substring(11));
+        temp[i] = temp[i].toString().substring(11);
+        temp[i] = temp[i].replaceAll("amp;", "");
 
-    for(int i=1;i<=count;i++)
-      {
-        if(typeArray[i-1]=='image')
-          {print('print');
-            print(temp[i].toString().substring(11));
-            temp[i]=temp[i].toString().substring(11);
-          temp[i]= temp[i].replaceAll("amp;", "");
-
-          print(temp[i]);
-          }
+        print(temp[i]);
       }
+    }
     print("COUNT home page=$count");
     // List<String> arrayData = [];
     for (int j = 1; j <= count; j++) {
@@ -114,7 +113,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
       arrays.add(jsonInsert);
     }
     print("arrays");
-      print(arrays);
+    print(arrays);
   }
 
   Future<void> gethttp() async {
@@ -163,6 +162,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
   @override
   void initState() {
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        print('keyboard $visible');
+        setState(() {
+          coverHeight = visible ? 170 : 350;
+        });
+      },
+    );
     super.initState();
     myTitle = new TextEditingController(text: null);
     // myContent = new TextEditingController(text: null);
@@ -289,48 +296,127 @@ class _MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xfff1f1f1),
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        title: Text('Retrieve Text Input'),
-      ),
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: RaisedButton(
-                child: Text("Submit"),
-                onPressed: () async {
-                  if (myTitle.text != ""&& arrays.length!=0)
-                  {
-                    print("SUCCESS============");
-                    await postRequest();
-                    setState(() {
-                      myTitle.clear();
-                      imageFile = null;
-                    });
-                    _showConfirm();
-                  } else {
-                    _showAlert();
-                  }
-                },
-              ),
+          Center(
+            child: Stack(
+              children: [
+                AnimatedContainer(
+                  curve: Curves.easeInOutQuad,
+                  duration: Duration(
+                    milliseconds: 400,
+                  ),
+                  // height: 170,
+                  height: coverHeight,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/CAcover.jpg'),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 12,
+                        blurRadius: 8,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+                AnimatedContainer(
+                    duration: Duration(milliseconds: 480),
+                    curve: Curves.easeInOutQuad,
+                    padding: EdgeInsets.only(top: coverHeight - 70),
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      "Create Article",
+                      style: TextStyle(
+                          fontSize: 60,
+                          color: Color.fromRGBO(255, 255, 255, 0.7),
+                          fontWeight: FontWeight.bold),
+                    ))
+              ],
             ),
           ),
           Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                'Create an Article',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-              )),
+            padding: const EdgeInsets.only(left: 14, right: 14),
+            child: Container(
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.only(
+                //     bottomLeft: Radius.circular(30),
+                //     bottomRight: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      // borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  )),
+                  color: Color(0xff114084),
+                  child: Text("Submit",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Color.fromRGBO(255, 255, 255, 0.9),
+                          fontWeight: FontWeight.w300)),
+                  onPressed: () async {
+                    if (myTitle.text != "" && arrays.length != 0) {
+                      print("SUCCESS============");
+                      await postRequest();
+                      setState(() {
+                        myTitle.clear();
+                        imageFile = null;
+                      });
+                      _showConfirm();
+                    } else {
+                      _showAlert();
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          // Padding(
+          //     padding: const EdgeInsets.all(12.0),
+          //     child: Text(
+          //       'Create an Article',
+          //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+          //     )),
           Container(
-              margin: EdgeInsets.only(top: 12,left: 12,right: 12,bottom: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.grey.withOpacity(0.7),
+                //     spreadRadius: 12,
+                //     blurRadius: 8,
+                //     offset: Offset(0, 5), // changes position of shadow
+                //   ),
+                // ],
+              ),
+              margin: EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 5),
               child: TextField(
                 controller: myTitle,
                 decoration: InputDecoration(
                   hintText: "Enter Title",
-                  fillColor: Colors.grey[300],
+                  fillColor: Color(0xff808080),
                   filled: true,
                 ),
               )),
@@ -339,8 +425,16 @@ class _MyCustomFormState extends State<MyCustomForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 showImage(),
-                RaisedButton(
-                  child: Text("Select Image from Gallery"),
+                FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  color: Color(0xff3466aa),
+                  child: Text(
+                    "Select Image from Gallery",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300, color: Colors.white),
+                  ),
                   onPressed: () {
                     pickImageFromGallery(ImageSource.gallery);
                     gethttp();
@@ -356,10 +450,10 @@ class _MyCustomFormState extends State<MyCustomForm> {
                 height: 70.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: Color(0xff3466aa),
                 ),
                 child: RaisedButton(
-                    color: Colors.blue.shade400,
+                    color: Color(0xff3466aa),
                     child: Text("Write Content",
                         style: TextStyle(
                             color: Colors.white,
@@ -369,6 +463,30 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       _MyHomePage(context);
                     }),
               ),
+              Opacity(
+                opacity: 0.8,
+                child: Container(
+                  height: 200,
+                  width: 300,
+                  // color: Colors.blue,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/fyi.png'),
+                        fit: BoxFit.contain),
+                    // borderRadius: BorderRadius.only(
+                    //     bottomLeft: Radius.circular(20),
+                    //     bottomRight: Radius.circular(20)),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.2),
+                    //     spreadRadius: 12,
+                    //     blurRadius: 8,
+                    //     offset: Offset(0, 5), // changes position of shadow
+                    //   ),
+                    // ],
+                  ),
+                ),
+              )
               // Container(
               //   margin: EdgeInsets.all(12),
               //   height: 40.0,
