@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
-        '/d': (BuildContext context) => MyHomePage(),
+        // '/d': (BuildContext context) => MyHomePage(),
       }, //CHANGE TESTER  1. MyCustomForm() 2.ImgSlide()
     );
   }
