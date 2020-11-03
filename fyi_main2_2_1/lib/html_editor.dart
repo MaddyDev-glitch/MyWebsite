@@ -179,64 +179,91 @@ class HtmlEditorState extends State<HtmlEditor> {
                     height: 1,
                   ),
             widget.showBottomToolbar
-                ? Padding(
-                    padding: const EdgeInsets.only(
-                        left: 4.0, right: 4, bottom: 8, top: 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        widgetIcon(Icons.image, "Image from device",
-                            onKlik: () {
-                          widget.useBottomSheet
-                              ? bottomSheetPickImage(context)
-                              : dialogPickImage(context);
-                        }),
-                      ],
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff808080),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 4.0, right: 4, bottom: 2, top: 2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlatButton(
+                          onPressed: (){
+                            widget.useBottomSheet
+                                ? bottomSheetPickImage(context)
+                                : dialogPickImage(context);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              widgetIcon(Icons.image,"",
+                                  onKlik: () {
+                                widget.useBottomSheet
+                                    ? bottomSheetPickImage(context)
+                                    : dialogPickImage(context);
+                              }),
+                              Text("Image from device",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w400),)
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(
                         left: 4.0, right: 4, bottom: 8, top: 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        widgetIcon(Icons.content_copy, "Copy",
-                            onKlik: () async {
-                          String data = await getText();
-                          Clipboard.setData(new ClipboardData(text: data));
-                        }),
-                        Row(
-                          children: [
-                            widgetIcon(Icons.keyboard_arrow_up_outlined, ""),
-                            Text(
-                              "SCROLL BAR",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 17,
-                                  color: Colors.black38),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xff808080),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            widgetIcon(Icons.content_copy, "Copy",
+                                onKlik: () async {
+                              String data = await getText();
+                              Clipboard.setData(new ClipboardData(text: data));
+                            }),
+                            Row(
+                              children: [
+                                widgetIcon(
+                                    Icons.keyboard_arrow_up_outlined, ""),
+                                Text(
+                                  "SCROLL BAR",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 17,
+                                      color: Colors.black38),
+                                ),
+                                widgetIcon(
+                                    Icons.keyboard_arrow_up_outlined, ""),
+                              ],
                             ),
-                            widgetIcon(Icons.keyboard_arrow_up_outlined, ""),
+                            widgetIcon(Icons.content_paste, "Paste",
+                                onKlik: () async {
+                              ClipboardData data =
+                                  await Clipboard.getData(Clipboard.kTextPlain);
+
+                              String txtIsi = data.text
+                                  .replaceAll("'", '\\"')
+                                  .replaceAll('"', '\\"')
+                                  .replaceAll("[", "\\[")
+                                  .replaceAll("]", "\\]")
+                                  .replaceAll("\n", "<br/>")
+                                  .replaceAll("\n\n", "<br/>")
+                                  .replaceAll("\r", " ")
+                                  .replaceAll('\r\n', " ");
+                              String txt = "\$('.note-editable').append( '" +
+                                  txtIsi +
+                                  "');";
+                              _controller.evaluateJavascript(txt);
+                            }),
                           ],
                         ),
-                        widgetIcon(Icons.content_paste, "Paste",
-                            onKlik: () async {
-                          ClipboardData data =
-                              await Clipboard.getData(Clipboard.kTextPlain);
-
-                          String txtIsi = data.text
-                              .replaceAll("'", '\\"')
-                              .replaceAll('"', '\\"')
-                              .replaceAll("[", "\\[")
-                              .replaceAll("]", "\\]")
-                              .replaceAll("\n", "<br/>")
-                              .replaceAll("\n\n", "<br/>")
-                              .replaceAll("\r", " ")
-                              .replaceAll('\r\n', " ");
-                          String txt =
-                              "\$('.note-editable').append( '" + txtIsi + "');";
-                          _controller.evaluateJavascript(txt);
-                        }),
-                      ],
+                      ),
                     ),
                   )
           ],
@@ -387,7 +414,7 @@ class HtmlEditorState extends State<HtmlEditor> {
                 await getHttp();
                 print("============================");
                 print(globresponse);
-                String filename = p.basename(file.path);
+                // String filename = p.basename(file.path);
                 // String Imagetag =
                 //     "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
                 String Imagetag = globresponse.toString();
