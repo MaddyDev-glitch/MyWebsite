@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyi_main2_2_1/texty.dart';
-// import 'package:fyi_main/zefyr.dart';
-// import 'package:fyi_forms/articlepage.dart';
-// import 'package:fyi_forms/imageslides.dart';
 import 'articlepage.dart';
 import 'imageslides.dart';
-import 'demo.dart';
-import 'package:rich_edit/rich_edit.dart';
 
 void main() => runApp(MyApp());
 

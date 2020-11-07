@@ -87,7 +87,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // of the TextField.
   Future<File> imageFile;
   TextEditingController myTitle;
-  List<String> Htmldata;
+  List<String> htmlData;
   List<Widget> list = new List();
 
   String result = "";
@@ -323,7 +323,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  void _removeConfirm() {
+  void _removeConfirm(int deleteIndex) {
     showDialog(
       context: context, barrierDismissible: false, // user must tap button!
 
@@ -350,17 +350,17 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       fontWeight: FontWeight.w700,
                       color: Colors.red.shade700),
                 ),
-                Container(
-                    width: 280,
-                    padding: EdgeInsets.all(10.0),
-                    child: TextField(
-                      maxLength: (list.length < 10) ? 1 : 2,
-                      controller: number,
-                      autocorrect: true,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          hintText: 'Box number you wish to remove'),
-                    )),
+                // Container(
+                //     width: 280,
+                //     padding: EdgeInsets.all(10.0),
+                //     child: TextField(
+                //       maxLength: (list.length < 10) ? 1 : 2,
+                //       controller: number,
+                //       autocorrect: true,
+                //       keyboardType: TextInputType.number,
+                //       decoration: InputDecoration(
+                //           hintText: 'Box number you wish to remove'),
+                //     )),
                 // new Text('Your article has been successfully submitted'),
               ],
             ),
@@ -383,12 +383,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
               onPressed: () {
                 // list.removeLast();
                 // type.removeLast();
-                String num = number.text;
-                int numMinusone = int.parse(num) - 1;
+                // String num = number.text;
+                // int numMinusone = int.parse(num) - 1;
                 print(num);
                 setState(() {
-                  list.removeAt(numMinusone);
-                  type.removeAt(numMinusone);
+                  list.removeAt(deleteIndex - 1);
+                  type.removeAt(deleteIndex - 1);
                   if (list.length == 0) {
                     editorHeight = 0;
                   }
@@ -575,7 +575,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       for (int j = 1; j <= list.length; j++) {
                         var currentStateText =
                             await keyEditor1[j].currentState.getText();
-                        var printo = currentStateText;
                         arrayData[j] = currentStateText;
                         majorSend = [arrayData, list.length, type];
 
@@ -716,7 +715,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     onPressed: () {
                                       setState(() {
                                         editorHeight = 500;
-                                        // list.add( input_tile(index: list.length,));
                                         type.add("text");
                                         list.add(
                                           Column(
@@ -794,24 +792,25 @@ class _MyCustomFormState extends State<MyCustomForm> {
                           ],
                         ),
 
-                        FlatButton(
-                            color: Colors.blueGrey,
-                            onPressed: () {
-                              if (list.length == 0) {
-                                _nullremoveError();
-                              } else {
-                                _removeConfirm();
-                              }
-                              // list.removeLast();
-                              // type.removeLast();
-                              setState(() {
-                                if (list.length == 0) {
-                                  editorHeight = 0;
-                                }
-                              });
-                            },
-                            child: Text("REMOVE Recent Text/Image",
-                                style: TextStyle(color: Colors.white))),
+                        // FlatButton(
+                        //     color: Colors.blueGrey,
+                        //     onPressed: () {
+                        //       if (list.length == 0) {
+                        //         _nullremoveError();
+                        //       } else {
+                        //         _removeConfirm(
+                        //             list.length); 
+                        //       }
+                        //       // list.removeLast();
+                        //       // type.removeLast();
+                        //       setState(() {
+                        //         if (list.length == 0) {
+                        //           editorHeight = 0;
+                        //         }
+                        //       });
+                        //     },
+                        //     child: Text("REMOVE Recent Text/Image",
+                        //         style: TextStyle(color: Colors.white))),
                         Padding(
                           padding: const EdgeInsets.all(0.0),
                           child: Row(
@@ -824,8 +823,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                 height: 40,
                                 color: Colors.redAccent,
                                 onPressed: () {
-                                  showAlertDialog(context);
-                                  editorHeight = 0;
+                                  if (list.length == 0) {
+                                    _nullremoveError();
+                                  } else {
+                                    showAlertDialog(context);
+                                    editorHeight = 0;
+                                  }
                                 },
                                 child: Text("Reset",
                                     style: TextStyle(
@@ -915,8 +918,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
-class input_tile extends StatelessWidget {
-  const input_tile({Key key, @required this.index}) : super(key: key);
+class Inputtile extends StatelessWidget {
+  const Inputtile({Key key, @required this.index}) : super(key: key);
   final int index;
 
   @override

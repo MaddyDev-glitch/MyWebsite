@@ -20,7 +20,7 @@ class _ImgSlideState extends State<ImgSlide> {
   // int i = 2;
   @override
   Widget build(BuildContext context) {
-    Widget image_carousel2 = Center(
+    Widget ImageCarousel2 = Center(
       child: SizedBox(
         height: 200.0,
         width: 350.0,
@@ -73,7 +73,7 @@ class _ImgSlideState extends State<ImgSlide> {
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                image_carousel2,
+                ImageCarousel2,
               ],
             ),
           ),

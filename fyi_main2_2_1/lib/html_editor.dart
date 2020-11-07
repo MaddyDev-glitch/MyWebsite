@@ -2,7 +2,6 @@ library html_editor;
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:html_editor/pick_image.dart';
 import 'package:path/path.dart' as p;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:dio/dio.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
@@ -428,11 +426,11 @@ class HtmlEditorState extends State<HtmlEditor> {
                 print("============================");
                 print(globresponse);
                 // String filename = p.basename(file.path);
-                // String Imagetag =
+                // String imageTag =
                 //     "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
-                String Imagetag = globresponse.toString();
+                String imageTag = globresponse.toString();
                 String txt =
-                    "\$('.note-editable').append( '" + Imagetag + "');";
+                    "\$('.note-editable').append( '" + imageTag + "');";
                 _controller.evaluateJavascript(txt);
               }),
             ));
