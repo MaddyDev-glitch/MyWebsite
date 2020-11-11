@@ -422,15 +422,15 @@ class HtmlEditorState extends State<HtmlEditor> {
               child: PickImage(callbackFile: (file) async {
                 print("INSIDE");
                 _image = file;
-                await getHttp();
+                 await getHttp();
                 print("============================");
                 print(globresponse);
                 // String filename = p.basename(file.path);
                 // String imageTag =
                 //     "<img width=\"${widget.widthImage}\" src=\"$globresponse\" data-filename=\"$filename\">";
-                String imageTag = globresponse.toString();
+                // String imageTag = globresponse.toString();
                 String txt =
-                    "\$('.note-editable').append( '" + imageTag + "');";
+                    "\$('.note-editable').append( '" + globresponse.toString() + "');";
                 _controller.evaluateJavascript(txt);
               }),
             ));

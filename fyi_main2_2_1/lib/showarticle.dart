@@ -215,9 +215,9 @@ Future<bool> _exitfunction()
                     if (index >= list.length - 4) {
                       supercount = supercount + 1;
                       gethttp(supercount);
-                      setState(() {
+                      // setState(() {
                         startParse();
-                      });
+                      // });
                     }
                     Widget widget = list.elementAt(index);
                     return widget;
