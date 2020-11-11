@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'dart:core';
 import 'html_editor.dart';
 import 'package:flutter/foundation.dart';
@@ -144,14 +144,19 @@ class _MyCustomFormState extends State<MyCustomForm> {
 
   @override
   void initState() {
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        print('keyboard $visible');
-        setState(() {
-          coverHeight = visible ? 170 : 350;
-        });
-      },
-    );
+    // KeyboardVisibilityNotification().addNewListener(
+    //   onChange: (bool visible) {
+    //     print('keyboard $visible');
+    //     setState(() {
+    //       coverHeight = visible ? 170 : 350;
+    //     });
+    //   },
+    // );
+    KeyboardVisibility.onChange.listen((bool visible) {
+      setState(() {
+              coverHeight = visible ? 170 : 350;
+      });
+    });
     super.initState();
     for (int z = 1; z <= 100; z++) {
       keyEditor1[z] = GlobalKey();
@@ -799,7 +804,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                         //         _nullremoveError();
                         //       } else {
                         //         _removeConfirm(
-                        //             list.length); 
+                        //             list.length);
                         //       }
                         //       // list.removeLast();
                         //       // type.removeLast();

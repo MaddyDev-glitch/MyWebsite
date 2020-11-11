@@ -36,15 +36,22 @@ dev_dependencies:
   image_picker: ^0.6.7+11
   carousel_pro: ^1.0.0
   cloud_firestore: ^0.13.7
-  #  zefyr:
-#  zefyr: ^0.12.0
   quill_delta: ^1.1.3
   html_editor: ^1.0.1
   dio: ^3.0.10
   dio_flutter_transformer: ^3.0.2
   rich_edit: ^0.1.1
   font_awesome_flutter: ^8.10.0
-  keyboard_visibility: ^0.5.6
+  flutter_keyboard_visibility: ^3.3.0
+  intl: ^0.16.1
+#  flutter_html: ^1.0.2
+#  css_text: ^2.1.0
+  flutter_widget_from_html: ^0.5.1+4
+
+
+
+
+
 
 
   #  cloud_firestore: ^0.14.1+2
