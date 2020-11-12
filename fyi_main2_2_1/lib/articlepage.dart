@@ -19,7 +19,7 @@ var coverImgUrl;
 List<dynamic> arrays = [];
 double coverHeight = 350;
 double editorHeight = 0;
-
+int delete_count = 0;
 List majorSend = [];
 List type = [];
 List<GlobalKey<HtmlEditorState>> keyEditor1 =
@@ -31,6 +31,7 @@ String token =
 FormData formData;
 List<String> arrayData = List<String>(200);
 String cls = "X";
+var status;
 
 class Tag {
   String type;
@@ -139,6 +140,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
         headers: {"x-auth-token": token, 'Content-Type': 'application/json'},
         body: body);
     print("${response.statusCode}");
+    status = response.statusCode;
     print("${response.body}");
     return response;
   }
@@ -247,6 +249,52 @@ class _MyCustomFormState extends State<MyCustomForm> {
           actions: [
             new FlatButton(
               child: new Text('Got It'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showError() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Create Article'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: [
+                new Text(
+                  'Ah Snap :/',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  'Looks like something went wrong',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 20,
+                ),
+                new Text('Try resubmitting your article'),
+              ],
+            ),
+          ),
+          actions: [
+            new FlatButton(
+              child: new Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -590,6 +638,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                     onPressed: () async {
                       List temp;
                       List typeArray;
+                      list.length = list.length + delete_count;
                       print("${list.length}");
                       // print("${list.}");
                       for (int j = 1; j <= list.length; j++) {
@@ -598,8 +647,13 @@ class _MyCustomFormState extends State<MyCustomForm> {
                           currentStateText =
                               await keyEditor1[j].currentState.getText();
                         } catch (xyz) {
-                          currentStateText = "";
-                          type[j-1]="text";
+                          if (typeArray[j - 1] == 'image') {
+                            currentStateText =
+                                "https://upload.wikimedia.org/wikipedia/commons/3/3d/1_120_transparent.png";
+                          } else {
+                            currentStateText = "<br>";
+                            // continue;}
+                          }
                         }
 
                         var printo = currentStateText;
@@ -645,14 +699,19 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       print(arrays);
 
                       if (myTitle.text != "") {
-                        //arrays.length != 0
                         print("SUCCESS============");
                         await postRequest();
-                        setState(() {
-                          myTitle.clear();
-                          imageFile = null;
-                        });
-                        _showConfirm();
+                        if (status>=200 && status<300) {
+                          setState(() {
+                            myTitle.clear();
+                            imageFile = null;
+                            list.clear();
+                            editorHeight=0;
+                          });
+                          _showConfirm();
+                        } else {
+                          _showError();
+                        }
                       } else {
                         _showAlert();
                       }
@@ -739,24 +798,28 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                   //   child: widget,
                                   // );
                                   return Dismissible(
-                                    // Each Dismissible must contain a Key. Keys allow Flutter to
-                                    // uniquely identify widgets.
-                                    key: Key(context.toString()),
-                                    // Provide a function that tells the app
-                                    // what to do after an item has been swiped away.
+                                    key: ValueKey(list.length),
+
                                     onDismissed: (direction) {
-                                      // Remove the item from the data source.
+                                      list.removeAt(index);
+                                      delete_count = delete_count + 1;
                                       setState(() {
-                                        list.removeAt(index);
-                                        list.length = list.length + 1;
-                                        type.removeAt(index);
                                         if (list.length == 0) {
                                           editorHeight = 0;
                                         }
                                       });
                                     },
                                     // Show a red background as the item is swiped away.
-                                    background: Container(color: Colors.red),
+                                    // background: Container(color: Colors.red),
+                                  background: Container(
+                                  color: Colors.red.shade800,
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                  ),),
                                     child: ListTile(title: widget),
                                   );
                                 },
@@ -851,25 +914,25 @@ class _MyCustomFormState extends State<MyCustomForm> {
                             // ),
                           ],
                         ),
-
-                        FlatButton(
-                            color: Colors.blueGrey,
-                            onPressed: () {
-                              if (list.length == 0) {
-                                _nullremoveError();
-                              } else {
-                                _removeConfirm();
-                              }
-                              // list.removeLast();
-                              // type.removeLast();
-                              setState(() {
-                                if (list.length == 0) {
-                                  editorHeight = 0;
-                                }
-                              });
-                            },
-                            child: Text("REMOVE Recent Text/Image",
-                                style: TextStyle(color: Colors.white))),
+                        //
+                        // FlatButton(
+                        //     color: Colors.blueGrey,
+                        //     onPressed: () {
+                        //       if (list.length == 0) {
+                        //         _nullremoveError();
+                        //       } else {
+                        //         _removeConfirm();
+                        //       }
+                        //       // list.removeLast();
+                        //       // type.removeLast();
+                        //       setState(() {
+                        //         if (list.length == 0) {
+                        //           editorHeight = 0;
+                        //         }
+                        //       });
+                        //     },
+                        //     child: Text("REMOVE Recent Text/Image",
+                        //         style: TextStyle(color: Colors.white))),
                         Padding(
                           padding: const EdgeInsets.all(0.0),
                           child: Row(
