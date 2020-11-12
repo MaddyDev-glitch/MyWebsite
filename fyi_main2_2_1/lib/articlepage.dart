@@ -698,7 +698,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       print("arrays");
                       print(arrays);
 
-                      if (myTitle.text != "") {
+                      if (myTitle.text != "" &&editorHeight!=0) {
                         print("SUCCESS============");
                         await postRequest();
                         if (status>=200 && status<300) {
