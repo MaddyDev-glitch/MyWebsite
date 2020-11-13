@@ -790,6 +790,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                 color: Color(0x3382b7dc),
                               ),
                               child: ListView.builder(
+                                cacheExtent: 2000000,
+                                addAutomaticKeepAlives: true,
+                                addRepaintBoundaries: false,
                                 itemBuilder: (context, index) {
                                   Widget widget = list.elementAt(index);
                                   // return widget;
@@ -797,30 +800,33 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                   //   key: Key(index.toString()),
                                   //   child: widget,
                                   // );
-                                  return Dismissible(
-                                    key: ValueKey(list.length),
+                                  return KeepAlive(
+                                    keepAlive: true,
+                                    child: Dismissible(
+                                      key: ValueKey(list.length),
 
-                                    onDismissed: (direction) {
-                                      list.removeAt(index);
-                                      delete_count = delete_count + 1;
-                                      setState(() {
-                                        if (list.length == 0) {
-                                          editorHeight = 0;
-                                        }
-                                      });
-                                    },
-                                    // Show a red background as the item is swiped away.
-                                    // background: Container(color: Colors.red),
-                                  background: Container(
-                                  color: Colors.red.shade800,
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Icon(
-                                  Icons.delete,
-                                  size: 50,
-                                  color: Colors.white,
-                                  ),),
-                                    child: ListTile(title: widget),
+                                      onDismissed: (direction) {
+                                        list.removeAt(index);
+                                        delete_count = delete_count + 1;
+                                        setState(() {
+                                          if (list.length == 0) {
+                                            editorHeight = 0;
+                                          }
+                                        });
+                                      },
+                                      // Show a red background as the item is swiped away.
+                                      // background: Container(color: Colors.red),
+                                    background: Container(
+                                    color: Colors.red.shade800,
+                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Icon(
+                                    Icons.delete,
+                                    size: 50,
+                                    color: Colors.white,
+                                    ),),
+                                      child: ListTile(title: widget),
+                                    ),
                                   );
                                 },
                                 itemCount: list.length,

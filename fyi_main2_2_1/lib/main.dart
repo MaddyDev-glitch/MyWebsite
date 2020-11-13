@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyi_main2_2_1/demo.dart';
+import 'package:fyi_main2_2_1/login_page.dart';
 import 'package:fyi_main2_2_1/showarticle.dart';
 import 'articlepage.dart';
 import 'imageslides.dart';
@@ -11,12 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FYI Mobile App',
-      home: Testing(),
+      home: LoginPage() ,
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
         // '/d': (BuildContext context) => MyHomePage(),
-      }, //CHANGE TESTER  1. MyCustomForm() 2.ImgSlide() 3. ArticleRow()
+      }, //CHANGE TESTER  1. MyCustomForm() 2.ImgSlide() 3. ArticleRow()  4.Testing()
     );
   }
 }

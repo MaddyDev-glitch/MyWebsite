@@ -90,8 +90,10 @@ class _ImgSlideState extends State<ImgSlide> {
                   if (snapshot.hasData) {
                     final messages = snapshot.data.documents;
                     for (var message in messages) {
-                      final imgtemp = message.data['url'];
-                      final texttemp = message.data['text'];
+                      // final imgtemp = message.data['url'];
+                      // final texttemp = message.data['text'];
+                      final imgtemp = "a";
+                      final texttemp = "a";
                       print("----------=========== $imgtemp");
                       print("----------============= $texttemp");
                       url.add(imgtemp);

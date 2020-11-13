@@ -10,10 +10,26 @@
       "client_info": {
         "mobilesdk_app_id": "1:213654932931:android:1655aff2a5660c6b018176",
         "android_client_info": {
-          "package_name": "com.example.fyi_main2_2_1"
+          "package_name": "fyi.vit"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "213654932931-orp6u1buccdgph7uq1jmn1t19uup7feh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fyi.vit",
+            "certificate_hash": "ea6d2d02313955d4e8fd66c8fd8adef4cb932730"
+          }
+        },
+        {
+          "client_id": "213654932931-5g5a06om0hihs120v2m925qojnn47doe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fyi.vit",
+            "certificate_hash": "1b2e1754921a29a050a2bf42340e737d7677b8ec"
+          }
+        },
         {
           "client_id": "213654932931-npjeavqmguh0qdmc66fi3o0gq9k0bom2.apps.googleusercontent.com",
           "client_type": 3
