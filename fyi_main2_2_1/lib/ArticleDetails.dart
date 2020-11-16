@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
 import 'package:dio/dio.dart';
 import 'dart:core';
 import 'package:intl/intl.dart';
-// import 'package:flutter_html/flutter_html.dart';
-// import 'package:css_text/css_text.dart';
+
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 var id;

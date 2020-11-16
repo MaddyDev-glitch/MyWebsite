@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyi_main2_2_1/articlepage.dart';
 import 'package:fyi_main2_2_1/showarticle.dart';
-
+import 'profilepage.dart';
 class Testing extends StatefulWidget {
+  String username;
+  Testing(this.username);
   @override
   _TestingState createState() => _TestingState();
 }
@@ -20,6 +22,10 @@ class _TestingState extends State<Testing> {
           Text(
             "DEMO NAVIGATOR",
             style: TextStyle(fontSize: 60,fontWeight: FontWeight.w300),
+          ),
+          Text(
+            "Hey ${widget.username}",
+            style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300),
           ),
           SizedBox(
             height: 100,
@@ -58,7 +64,26 @@ class _TestingState extends State<Testing> {
               "View Article",
               style: TextStyle(fontSize: 50,fontWeight: FontWeight.w300),
             ),
-          )
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          FlatButton(
+            color: Colors.blue,
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileScreen()),
+                );
+              });
+            },
+            child: Text(
+              "View Profile",
+              style: TextStyle(fontSize: 50,fontWeight: FontWeight.w300),
+            ),
+          ),
         ],
       ),
     ));
