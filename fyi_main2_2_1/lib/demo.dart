@@ -75,7 +75,7 @@ class _TestingState extends State<Testing> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfileScreen()),
+                      builder: (context) => ProfileScreen(widget.username)),
                 );
               });
             },

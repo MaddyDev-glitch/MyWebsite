@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-var imagepadtop=50.0;
+
+var imagepadtop = 50.0;
+
 class ProfileScreen extends StatefulWidget {
-  static Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  String username;
+  ProfileScreen(this.username);
+  // static Pattern pattern =
+  //     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -44,100 +48,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _textFormField({
-    String hintText,
-    IconData icon,
-  }) {
-    return Material(
-      elevation: 1,
-      shadowColor: Colors.grey,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          4,
-        ),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(
-                10,
-              ),
-            ),
-            prefixIcon: Icon(
-              icon,
-              color: Theme.of(context).primaryColor,
-            ),
-            hintText: hintText,
-            hintStyle: TextStyle(
-              letterSpacing: 1,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-              fontSize: 18
-            ),
-            filled: true,
-            fillColor: Colors.white30),
-      ),
-    );
-  }
+  // Widget _textFormField({
+  //   String hintText,
+  //   IconData icon,
+  // }) {
+  //   return Material(
+  //     elevation: 1,
+  //     shadowColor: Colors.grey,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(
+  //         4,
+  //       ),
+  //     ),
+  //     child: TextField(
+  //       decoration: InputDecoration(
+  //           border: OutlineInputBorder(
+  //             borderSide: BorderSide.none,
+  //             borderRadius: BorderRadius.circular(
+  //               10,
+  //             ),
+  //           ),
+  //           prefixIcon: Icon(
+  //             icon,
+  //             color: Theme.of(context).primaryColor,
+  //           ),
+  //           hintText: hintText,
+  //           hintStyle: TextStyle(
+  //               letterSpacing: 1,
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.w300,
+  //               fontSize: 18),
+  //           filled: true,
+  //           fillColor: Colors.white30),
+  //     ),
+  //   );
+  // }
 
   Widget _textFormFieldCalling() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20,right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _textFormField(
-              hintText: 'User Name',
-              icon: Icons.person,
-            ),
-            SizedBox(height: 20,),
-            _textFormField(
-              hintText: 'Date of Birth',
-              icon: Icons.calendar_today,
-            ),
-            SizedBox(height: 20,),
+        children: [
+          // _textFormField(
+          //   hintText: 'User Name',
+          //   icon: Icons.person,
+          // ),
+          infocard(widget.username, Icons.person),
+          SizedBox(
+            height: 20,
+          ),
+          infocard("date", Icons.calendar_today),
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Date of Birth',
+          //   icon: Icons.calendar_today,
+          // ),
+          infocard("email", Icons.mail),
 
-            _textFormField(
-              hintText: 'E-mail',
-              icon: Icons.mail,
-            ),
-            SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'E-mail',
+          //   icon: Icons.mail,
+          // ),
+          infocard("12345346", Icons.phone),
 
-            _textFormField(
-              hintText: 'Phone Number',
-              icon: Icons.phone,
-            ),
-            SizedBox(height: 20,),
-            _textFormField(
-              hintText: 'Education',
-              icon: Icons.school,
-            ),
-            SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Phone Number',
+          //   icon: Icons.phone,
+          // ),
+          infocard("VIT", Icons.school),
 
-            _textFormField(
-              hintText: 'Experience',
-              icon: Icons.work,
-            ),
-            SizedBox(height: 20,),
-            _textFormField(
-              hintText: 'Skills',
-              icon: Icons.star,
-            ),
-            SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Education',
+          //   icon: Icons.school,
+          // ),
+          infocard("expericence", Icons.work),
 
-            _textFormField(
-              hintText: 'Achievements',
-              icon: Icons.stars,
-            ),
-            SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
 
-            _textFormField(
-              hintText: 'Projects',
-              icon: Icons.post_add,
-            ),
-            SizedBox(height: 20,),
+          // _textFormField(
+          //   hintText: 'Experience',
+          //   icon: Icons.work,
+          // ),
+          infocard("skills", Icons.star),
 
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Skills',
+          //   icon: Icons.star,
+          // ),
+          infocard("achievements", Icons.stars),
+
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Achievements',
+          //   icon: Icons.stars,
+          // ),
+          infocard("projects", Icons.post_add),
+
+          SizedBox(
+            height: 20,
+          ),
+          // _textFormField(
+          //   hintText: 'Projects',
+          //   icon: Icons.post_add,
+          // ),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             height: 55,
             width: double.infinity,
@@ -155,16 +190,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {},
             ),
           ),
-            SizedBox(height: 40,),
-
-          ],
-        ),
+          SizedBox(
+            height: 40,
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    imagepadtop=MediaQuery.of(context).size.width / 4;
+    imagepadtop = MediaQuery.of(context).size.width / 4;
 
     return SafeArea(
       child: Scaffold(
@@ -179,9 +215,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CustomPaint(
                     child: Container(
-                      // width: MediaQuery.of(context).size.width,
-                      // height: MediaQuery.of(context).size.height,
-                    ),
+                        // width: MediaQuery.of(context).size.width,
+                        // height: MediaQuery.of(context).size.height,
+                        ),
                     painter: HeaderCurvedContainer(),
                   ),
                   _circleAvatar(),
@@ -195,6 +231,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // _circleAvatar(),
                   _textFormFieldCalling()
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class infocard extends StatelessWidget {
+  String data;
+  IconData icon;
+  infocard(this.data, this.icon);
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 1,
+      shadowColor: Colors.grey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          4,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            10,
+          ),
+          // color: Colors.blue
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Theme.of(context).primaryColor,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                data,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black),
               ),
             ],
           ),

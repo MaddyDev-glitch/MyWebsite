@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyi_main2_2_1/login_page.dart';
+import 'package:fyi_main2_2_1/profilepage.dart';
 import 'articlepage.dart';
 import 'imageslides.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FYI Mobile App',
-      home: LoginPage(),
+      home: ProfileScreen("Sri Madhaven"),
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
