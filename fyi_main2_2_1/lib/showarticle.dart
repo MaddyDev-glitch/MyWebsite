@@ -37,66 +37,27 @@ Future<void> gethttp(int index) async {
 }
 
 class Article {
-  // Source source;
-  // String author;
   String title;
   String coverImage;
   String id;
   int date;
-  // String description;
-  // String url;
-  // String urlToImage;
-  // String publishedAt;
-  // String content;
 
   Article({
-    // this.source,
-    // this.author,
     this.title,
     this.coverImage,
     this.id,
     this.date,
-    // this.description,
-    // this.url,
-    // this.urlToImage,
-    // this.publishedAt,
-    // this.content
   });
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
-        // source: Source.fromJson(json["source"]),
-        // author: json["author"],
         title: json["title"],
         coverImage: json["coverImage"],
         id: json["id"],
-        date: json["date"]
-        // description: json["description"],
-        // url: json["url"],
-        // urlToImage: json["urlToImage"],
-        // publishedAt: json["publishedAt"],
-        // content: json["content"]
-        );
+        date: json["date"]);
   }
 }
 
-class Source {
-  String coverImage;
-  String name;
-  String id;
-  int date;
-
-  Source({this.coverImage, this.name, this.id, this.date});
-
-  factory Source.fromJson(Map<String, dynamic> json) {
-    return Source(
-      coverImage: json["coverImage"] as String,
-      name: json["name"] as String,
-      id: json["id"] as String,
-      date: json["date"] as int,
-    );
-  }
-}
 
 CircleAvatar articleImage(var url) {
   if (url == "null") {
@@ -171,15 +132,14 @@ class _ArticleRowState extends State<ArticleRow> {
   //     ),
   //   );
   // }
-Future<bool> _exitfunction()
-{
-  listcont.clear();
-  print("lenght:");
-  print("${listcont.length}");
-  // Navigator.pop(context);
-  Navigator.of(context).pop(false);
+  Future<bool> _exitfunction() {
+    listcont.clear();
+    print("lenght:");
+    print("${listcont.length}");
+    // Navigator.pop(context);
+    Navigator.of(context).pop(false);
+  }
 
-}
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -216,7 +176,7 @@ Future<bool> _exitfunction()
                       supercount = supercount + 1;
                       gethttp(supercount);
                       // setState(() {
-                        startParse();
+                      startParse();
                       // });
                     }
                     Widget widget = list.elementAt(index);
