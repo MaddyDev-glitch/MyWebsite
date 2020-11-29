@@ -5,16 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:fyi_main2_2_1/ArticleDetails.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-
+import 'login_page.dart' as login;
 import 'package:dio/dio.dart';
 
 var imagepadtop = 50.0;
-
 String fileName = "CacheData.json";
-List<ExperienceList> finalexp;
-List<EducationList> finaledu;
-List<SkillsList> finalskill;
-
+List<login.ExperienceList> finalexp;
+List<login.EducationList> finaledu;
+List<login.SkillsList> finalskill;
+List<Widget> experienceexpandlist = new List();
+List<Widget> skillexpandlist = new List();
+List<Widget> educationexpandlist = new List();
+List<Widget> projectexpandlist= new List();
+List<Widget> achievementexpandlist= new List();
+List<Expanditem> items;
 Response response;
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
@@ -39,231 +43,260 @@ class Expanditem {
   Expanditem(this.isExpanded, this.header, this.body, this.iconpic);
 }
 
-class ExperienceList {
-  String organization;
-  String from;
-  String to;
-  String description;
-  String post;
-  String status;
-
-  ExperienceList({
-    this.organization,
-    this.from,
-    this.to,
-    this.description,
-    this.post,
-    this.status,
-  });
-
-  factory ExperienceList.fromJson(Map<String, dynamic> json) => ExperienceList(
-        organization: json["organization"],
-        from: json["from"],
-        to: json["to"],
-        description: json["description"],
-        post: json["post"],
-        status: json["status"],
-      );
-}
-
-class SkillsList {
-  String field;
-  num level;
-
-  SkillsList({this.field, this.level});
-
-  factory SkillsList.fromJson(Map<String, dynamic> json) => SkillsList(
-        field: json["field"],
-        level: json["level"],
-      );
-}
-
-class EducationList {
-  String to;
-  String degree;
-  String description;
-  String status;
-  String from;
-  String institute;
-
-  EducationList(
-      {this.status,
-      this.description,
-      this.from,
-      this.degree,
-      this.institute,
-      this.to});
-
-  factory EducationList.fromJson(Map<String, dynamic> json) => EducationList(
-        to: json["to"],
-        degree: json["degree"],
-        description: json["description"],
-        status: json["status"],
-        from: json["from"],
-        institute: json["institute"],
-      );
-}
 
 class ProfileScreen extends StatefulWidget {
   String kname;
   String kimage;
   String kemail;
-  String kphone;
+  int kphone;
   String kdob;
   String kabout;
-  List<EducationList> kedulist;
-  List<SkillsList> kskilllist;
-  List<ExperienceList> kexplist;
-  ProfileScreen(this.kname);
-
+  List<login.EducationList> kedulist;
+  List<login.SkillsList> kskilllist;
+  List<login.ExperienceList> kexplist;
+  List<Widget> experiencewidget;
+  List<Widget> skillwidget;
+  List<Widget> educationwidget;
+  List<Widget> achievementwidget;
+  List<Widget> projectwidget;
+  ProfileScreen(
+      this.kabout,
+      this.kdob,
+      this.kedulist,
+      this.kemail,
+      this.kexplist,
+      this.kimage,
+      this.kname,
+      this.kphone,
+      this.kskilllist,
+      this.experiencewidget,
+      this.skillwidget,
+      this.educationwidget,this.achievementwidget,this.projectwidget);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future<void> gethttp() async {
-    var dio = Dio();
-    try {
-      response = await dio.get(
-        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/behaal_baalak",
-        queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
-      );
-      print("GETHHTTP fucntion print -> $response");
-      var body = response.data;
-      // final ids = json.decode(response.data);
-      print(body);
-      educationJson = body['education'];
-      skillsJson = body['skills'];
-      projectsJson = body['projects'];
-      achievementsJson = body['achievements'];
-      experienceJson = body['experience'];
-      about = body['about'];
-      dob = body['dob'];
-      phone = body['phone'];
-      name = body['name'];
-      image = body['image'];
-      email = body['email'];
-      var tempexperience = experienceJson;
-      var tempskill=skillsJson;
-      var tempedu=educationJson;
-      finalexp = tempexperience
-          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-          .toList();
-      finaledu = tempedu
-          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-          .toList();
-      finalskill = tempskill
-          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-          .toList();
-
-      var tempDir = await getTemporaryDirectory();
-      File file = new File(tempDir.path + "/" + fileName);
-      file.writeAsString(response.toString(),
-          flush: true, mode: FileMode.write);
-    } catch (e) {
-      print(e);
-      print("ERROR");
-    }
-  }
-
-  Future<void> getcache() async {
-    var cacheDir = await getTemporaryDirectory();
-    print("getcache");
-    if (await File(cacheDir.path + "/" + fileName).exists()) {
-      print("Loading from cache");
-      var cachedata = File(cacheDir.path + "/" + fileName).readAsStringSync();
-      var cachedata1 = json.decode(cachedata);
-      print(cachedata1);
-      var body = cachedata1;
-      // final ids = json.decode(response.data);
-      educationJson = body['education'];
-      about = body['about'];
-      skillsJson = body['skills'];
-      projectsJson = body['projects'];
-      dob = body['dob'];
-      phone = body['phone'];
-      name = body['name'];
-      achievementsJson = body['achievements'];
-      image = body['image'];
-      email = body['email'];
-      experienceJson = body['experience'];
-      print(experienceJson.toString());
-      var tempexperience = experienceJson;
-      finalexp = tempexperience
-          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-          .toList();
-      print(finalexp[0].organization);
-    }
-    //TODO: If the Json file does not exist, then make the API Call
-    else {
-      gethttp();
-    }
-  }
-
-  List<Expanditem> items = <Expanditem>[
-    Expanditem(
-        false, // isExpanded ?
-        'Experience', // header
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(children: <Widget>[
-              Text(experienceJson.toString()),
-            ])), // body
-        Icon(
-          Icons.work,
-          color: Colors.blue,
-        ) // iconPic
-        ),
-    Expanditem(
-        false, // isExpanded ?
-        'Skills', // header
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(children: <Widget>[
-              Text("bb"),
-            ])), // body
-        Icon(
-          Icons.star,
-          color: Colors.blue,
-        ) // iconPic
-        ),
-    Expanditem(
-        false, // isExpanded ?
-        'Achievements', // header
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(
-              child: Column(children: <Widget>[
-                Text("gu"),
-              ]),
-            )), // body
-        Icon(
-          Icons.stars,
-          color: Colors.blue,
-        ) // iconPic
-        ),
-    Expanditem(
-        false, // isExpanded ?
-        'Projects', // header
-        Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(
-              child: Column(children: <Widget>[
-                Text("vy"),
-              ]),
-            )), // body
-        Icon(
-          Icons.post_add,
-          color: Colors.blue,
-        ) // iconPic
-        ),
-  ];
+  // Future<void> gethttp() async {
+  //   var dio = Dio();
+  //   try {
+  //     response = await dio.get(
+  //       "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/behaal_baalak",
+  //       queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
+  //     );
+  //     print("GETHHTTP fucntion print -> $response");
+  //     var body = response.data;
+  //     // final ids = json.decode(response.data);
+  //     print(body);
+  //     educationJson = body['education'];
+  //     skillsJson = body['skills'];
+  //     projectsJson = body['projects'];
+  //     achievementsJson = body['achievements'];
+  //     experienceJson = body['experience'];
+  //     about = body['about'];
+  //     dob = body['dob'];
+  //     phone = body['phone'];
+  //     name = body['name'];
+  //     image = body['image'];
+  //     email = body['email'];
+  //     var tempexperience = experienceJson;
+  //     var tempskill=skillsJson;
+  //     var tempedu=educationJson;
+  //     finalexp = tempexperience
+  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+  //         .toList();
+  //     finaledu = tempedu
+  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+  //         .toList();
+  //     finalskill = tempskill
+  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+  //         .toList();
+  //
+  //     var tempDir = await getTemporaryDirectory();
+  //     File file = new File(tempDir.path + "/" + fileName);
+  //     file.writeAsString(response.toString(),
+  //         flush: true, mode: FileMode.write);
+  //   } catch (e) {
+  //     print(e);
+  //     print("ERROR");
+  //   }
+  // }
+  //
+  // Future<void> getcache() async {
+  //   var cacheDir = await getTemporaryDirectory();
+  //   print("getcache");
+  //   if (await File(cacheDir.path + "/" + fileName).exists()) {
+  //     print("Loading from cache");
+  //     var cachedata = File(cacheDir.path + "/" + fileName).readAsStringSync();
+  //     var cachedata1 = json.decode(cachedata);
+  //     print(cachedata1);
+  //     var body = cachedata1;
+  //     // final ids = json.decode(response.data);
+  //     educationJson = body['education'];
+  //     about = body['about'];
+  //     skillsJson = body['skills'];
+  //     projectsJson = body['projects'];
+  //     dob = body['dob'];
+  //     phone = body['phone'];
+  //     name = body['name'];
+  //     achievementsJson = body['achievements'];
+  //     image = body['image'];
+  //     email = body['email'];
+  //     experienceJson = body['experience'];
+  //     print(experienceJson.toString());
+  //     var tempexperience = experienceJson;
+  //     finalexp = tempexperience
+  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+  //         .toList();
+  //     print(finalexp[0].organization);
+  //   }
+  //   //TODO: If the Json file does not exist, then make the API Call
+  //   else {
+  //     gethttp();
+  //   }
+  // }
 
   @override
   void initState() {
-    super.initState();
+    name = widget.kname;
+    phone = widget.kphone;
+    image = widget.kimage;
+    email = widget.kemail;
+    dob = widget.kdob;
+    about = widget.kabout;
+    finaledu = widget.kedulist;
+    finalskill = widget.kskilllist;
+    finalexp = widget.kexplist;
+    experienceexpandlist = widget.experiencewidget;
+    skillexpandlist = widget.skillwidget;
+    educationexpandlist = widget.educationwidget;
+    achievementexpandlist=widget.achievementwidget;
+    projectexpandlist=widget.projectwidget;
+    print(projectexpandlist[0]);
+    print(finalexp[0].organization);
+    print(widget.kexplist[0].organization);
+    print(image);
+    print(widget.kimage);
 
-    getcache();
+    super.initState();
+    items = <Expanditem>[
+      Expanditem(
+          false, // isExpanded ?
+          'Education', // header
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ListView.builder(
+                      shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+
+                        itemCount: educationexpandlist.length,
+                        itemBuilder: (context, int index) {
+                          Widget widget =
+                              educationexpandlist.elementAt(index);
+                          return widget;
+                        })
+                    // functioneducation(),
+                  ])), // body
+          Icon(
+            Icons.school,
+            color: Colors.blue,
+          ) // iconPic
+          ),
+      Expanditem(
+          false, // isExpanded ?
+          'Experience', // header
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                ListView.builder(
+                  shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: experienceexpandlist.length,
+                    itemBuilder: (context, int index) {
+                      Widget widget = experienceexpandlist.elementAt(index);
+                      return widget;
+                    })
+              ])), // body
+          Icon(
+            Icons.work,
+            color: Colors.blue,
+          ) // iconPic
+          ),
+      Expanditem(
+          false, // isExpanded ?
+          'Skills', // header
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: skillexpandlist.length,
+                        itemBuilder: (context, int index) {
+                          Widget widget = skillexpandlist.elementAt(index);
+                          return widget;
+                        })
+                    // functioneducation(),
+                  ])), // body
+          Icon(
+            Icons.star,
+            color: Colors.blue,
+          ) // iconPic
+          ),
+      Expanditem(
+          false, // isExpanded ?
+          'Achievements', // header
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: achievementexpandlist.length,
+                        itemBuilder: (context, int index) {
+                          Widget widget = achievementexpandlist.elementAt(index);
+                          return widget;
+                        })
+                    // functioneducation(),
+                  ])), // body
+          Icon(
+            Icons.stars,
+            color: Colors.blue,
+          ) // iconPic
+          ),
+      Expanditem(
+          false, // isExpanded ?
+          'Projects', // header
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: projectexpandlist.length,
+                        itemBuilder: (context, int index) {
+                          Widget widget = projectexpandlist.elementAt(index);
+                          return widget;
+                        })
+                    // functioneducation(),
+                  ])), // body
+          Icon(
+            Icons.post_add,
+            color: Colors.blue,
+          ) // iconPic
+          ),
+    ];
   }
 
   Widget _profileText() {
@@ -294,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: Colors.white,
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('images/fyi.png'),
+            image: NetworkImage(widget.kimage),
           ),
         ),
         // child: FadeInImage(
@@ -305,8 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _textFormFieldCalling() {
-    List_Criteria = ListView(
-      physics: const NeverScrollableScrollPhysics(),
+    List_Criteria = Column(
       children: [
         ExpansionPanelList(
           elevation: 0,
@@ -342,24 +374,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          infocard(name, Icons.person),
-          infocard(dob, Icons.calendar_today),
-          infocard(email, Icons.mail),
-          infocard(phone.toString(), Icons.phone),
-          infocard("VIT", Icons.school),
-          SizedBox(
-            height: 5,
-          ),
-          Container(height: contheight, child: List_Criteria),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            infocard(name, Icons.person),
+            infocard(dob, Icons.calendar_today),
+            infocard(email, Icons.mail),
+            infocard(phone.toString(), Icons.phone),
+            // infocard("VIT", Icons.school),
+            SizedBox(
+              height: 5,
+            ),
+            List_Criteria,
+          ],
+        ),
       ),
     );
   }
 
-  ListView List_Criteria;
+  Column List_Criteria;
 
   @override
   Widget build(BuildContext context) {
@@ -381,15 +415,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _circleAvatar(),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _profileText(),
-                  // _circleAvatar(),
-                  _textFormFieldCalling(),
-                ],
-              ),
+              _profileText(),
+              // _circleAvatar(),
+              _textFormFieldCalling(),
             ],
           ),
         ),

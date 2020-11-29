@@ -1,10 +1,154 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyi_main2_2_1/demo.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+
+String fileName = "CacheData.json";
+Response response;
+String token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
+var educationJson;
+var about;
+var skillsJson;
+var projectsJson;
+var dob;
+var phone;
+var name;
+var achievementsJson;
+var image;
+var email;
+var experienceJson;
+List<ExperienceList> finalexp;
+List<EducationList> finaledu;
+List<SkillsList> finalskill;
+List<ProjectList> finalproject;
+List<AchievementList> finalachievement;
+
+List<Widget> experienceexpandlist = new List();
+List<Widget> skillexpandlist = new List();
+List<Widget> educationexpandlist = new List();
+List<Widget> projectexpandlist = new List();
+List<Widget> achievementexpandlist = new List();
+
+class ExperienceList {
+  String organization;
+  String from;
+  String to;
+  String description;
+  String post;
+  String status;
+
+  ExperienceList({
+    this.organization,
+    this.from,
+    this.to,
+    this.description,
+    this.post,
+    this.status,
+  });
+
+  factory ExperienceList.fromJson(Map<String, dynamic> json) => ExperienceList(
+        organization: json["organization"],
+        from: json["from"],
+        to: json["to"],
+        description: json["description"],
+        post: json["post"],
+        status: json["status"],
+      );
+}
+
+class SkillsList {
+  String field;
+  String level;
+
+  SkillsList({this.field, this.level});
+
+  factory SkillsList.fromJson(Map<String, dynamic> json) => SkillsList(
+        field: json["field"],
+        level: json["level"],
+      );
+}
+
+class EducationList {
+  String to;
+  String degree;
+  String description;
+  String status;
+  String from;
+  String institute;
+
+  EducationList(
+      {this.status,
+      this.description,
+      this.from,
+      this.degree,
+      this.institute,
+      this.to});
+
+  factory EducationList.fromJson(Map<String, dynamic> json) => EducationList(
+        to: json["to"],
+        degree: json["degree"],
+        description: json["description"],
+        status: json["status"],
+        from: json["from"],
+        institute: json["institute"],
+      );
+}
+
+class ProjectList {
+  String to;
+  String link;
+  String description;
+  String status;
+  String from;
+  String name;
+
+  ProjectList(
+      {this.status,
+      this.description,
+      this.from,
+      this.name,
+      this.to,
+      this.link});
+
+  factory ProjectList.fromJson(Map<String, dynamic> json) => ProjectList(
+        to: json["to"],
+        name: json["name"],
+        description: json["description"],
+        status: json["status"],
+        from: json["from"],
+        link: json["link"],
+      );
+}
+
+class AchievementList {
+  String title;
+  String year;
+  String description;
+  String issuer;
+
+  AchievementList({
+    this.title,
+    this.description,
+    this.year,
+    this.issuer,
+  });
+
+  factory AchievementList.fromJson(Map<String, dynamic> json) =>
+      AchievementList(
+        title: json["title"],
+        year: json["year"],
+        description: json["description"],
+        issuer: json["issuer"],
+      );
+}
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -55,6 +199,475 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<void> gethttp(String userloginname) async {
+    var dio = Dio();
+    try {
+      response = await dio.get(
+        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/behaal_baalak",
+        queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
+      );
+      print("GETHHTTP fucntion print -> $response");
+      var body = response.data;
+      // final ids = json.decode(response.data);
+      print(body);
+      educationJson = body['education'];
+      skillsJson = body['skills'];
+      projectsJson = body['projects'];
+      achievementsJson = body['achievements'];
+      experienceJson = body['experience'];
+      about = body['about'];
+      dob = body['dob'];
+      phone = body['phone'];
+      name = body['name'];
+      image = body['image'];
+      email = body['email'];
+      var tempexperience = experienceJson;
+      var tempskill = skillsJson;
+      var tempedu = educationJson;
+      var tempach = achievementsJson;
+      var temppro = projectsJson;
+      finalexp = tempexperience
+          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+          .toList();
+      finaledu = tempedu
+          .map<EducationList>((json) => EducationList.fromJson(json))
+          .toList();
+      finalskill = tempskill
+          .map<SkillsList>((json) => SkillsList.fromJson(json))
+          .toList();
+      finalproject = temppro
+          .map<ProjectList>((json) => ProjectList.fromJson(json))
+          .toList();
+      finalachievement = tempach
+          .map<AchievementList>((json) => AchievementList.fromJson(json))
+          .toList();
+      for (int i = 0; i < finalexp.length; i++) {
+        if (finalexp[i].status.toLowerCase() == "completed") {
+          finalexp[i].status = " ";
+        }
+        experienceexpandlist.add(ExperienceContainer(
+            finalexp[i].organization,
+            finalexp[i].post,
+            finalexp[i].from,
+            finalexp[i].to,
+            finalexp[i].status,
+            finalexp[i].description));
+      }
+      for (int i = 0; i < finalskill.length; i++) {
+        skillexpandlist
+            .add(SkillContainer(finalskill[i].field, finalskill[i].level));
+      }
+      for (int i = 0; i < finaledu.length; i++) {
+        if (finaledu[i].status.toLowerCase() == "completed") {
+          finaledu[i].status = " ";
+        }
+        educationexpandlist.add(EducationContainer(
+            finaledu[i].degree,
+            finaledu[i].institute,
+            finaledu[i].from,
+            finaledu[i].to,
+            finaledu[i].status,
+            finaledu[i].description));
+      }
+      for (int i = 0; i < finalachievement.length; i++) {
+        achievementexpandlist.add(AchievementContainer(
+            finalachievement[i].title,
+            finalachievement[i].year,
+            finalachievement[i].issuer,
+            finalachievement[i].description));
+      }
+      for (int i = 0; i < finalproject.length; i++) {
+        if (finalproject[i].status.toLowerCase() == "completed") {
+          finalproject[i].status = " ";
+        }
+        projectexpandlist.add(ProjectContainer(
+            finalproject[i].name,
+            finalproject[i].link,
+            finalproject[i].from,
+            finalproject[i].to,
+            finalproject[i].status,
+            finalproject[i].description));
+      }
+      var tempDir = await getTemporaryDirectory();
+      File file = new File(tempDir.path + "/" + fileName);
+      file.writeAsString(response.toString(),
+          flush: true, mode: FileMode.write);
+    } catch (e) {
+      print(e);
+      print("ERROR");
+    }
+  }
+
+  Future<void> getcache(String userloginname) async {
+    var cacheDir = await getTemporaryDirectory();
+    print("getcache");
+    if (await File(cacheDir.path + "/" + fileName).exists()) {
+      print("Loading from cache");
+      var cachedata = File(cacheDir.path + "/" + fileName).readAsStringSync();
+      var cachedata1 = json.decode(cachedata);
+      print(cachedata1);
+      var body = cachedata1;
+      // final ids = json.decode(response.data);
+      educationJson = body['education'];
+      about = body['about'];
+      skillsJson = body['skills'];
+      projectsJson = body['projects'];
+      dob = body['dob'];
+      phone = body['phone'];
+      name = body['name'];
+      achievementsJson = body['achievements'];
+      image = body['picture'];
+      email = body['email'];
+      experienceJson = body['experience'];
+      print(experienceJson.toString());
+      var tempexperience = experienceJson;
+      var tempskill = skillsJson;
+      var tempedu = educationJson;
+      var tempach = achievementsJson;
+      var temppro = projectsJson;
+      finalexp = tempexperience
+          .map<ExperienceList>((json) => ExperienceList.fromJson(json))
+          .toList();
+      finaledu = tempedu
+          .map<EducationList>((json) => EducationList.fromJson(json))
+          .toList();
+      finalskill = tempskill
+          .map<SkillsList>((json) => SkillsList.fromJson(json))
+          .toList();
+      finalproject = temppro
+          .map<ProjectList>((json) => ProjectList.fromJson(json))
+          .toList();
+      finalachievement = tempach
+          .map<AchievementList>((json) => AchievementList.fromJson(json))
+          .toList();
+      for (int i = 0; i < finalexp.length; i++) {
+        if (finalexp[i].status.toLowerCase() == "completed") {
+          finalexp[i].status = " ";
+        }
+        experienceexpandlist.add(ExperienceContainer(
+            finalexp[i].organization,
+            finalexp[i].post,
+            finalexp[i].from,
+            finalexp[i].to,
+            finalexp[i].status,
+            finalexp[i].description));
+      }
+      for (int i = 0; i < finalskill.length; i++) {
+        skillexpandlist
+            .add(SkillContainer(finalskill[i].field, finalskill[i].level));
+      }
+      for (int i = 0; i < finaledu.length; i++) {
+        if (finaledu[i].status.toLowerCase() == "completed") {
+          finaledu[i].status = " ";
+        }
+        educationexpandlist.add(EducationContainer(
+            finaledu[i].degree,
+            finaledu[i].institute,
+            finaledu[i].from,
+            finaledu[i].to,
+            finaledu[i].status,
+            finaledu[i].description));
+      }
+      for (int i = 0; i < finalachievement.length; i++) {
+        achievementexpandlist.add(AchievementContainer(
+            finalachievement[i].title,
+            finalachievement[i].year,
+            finalachievement[i].issuer,
+            finalachievement[i].description));
+      }
+      for (int i = 0; i < finalproject.length; i++) {
+        if (finalproject[i].status.toLowerCase() == "completed") {
+          finalproject[i].status = " ";
+        }
+        projectexpandlist.add(ProjectContainer(
+            finalproject[i].name,
+            finalproject[i].link,
+            finalproject[i].from,
+            finalproject[i].to,
+            finalproject[i].status,
+            finalproject[i].description));
+      }
+      print(finalexp[0].organization);
+      print(image);
+    }
+    //TODO: If the Json file does not exist, then make the API Call
+    else {
+      gethttp(userloginname);
+    }
+  }
+
+  Widget ExperienceContainer(String title, String post, String from, String to,
+      String status, String desc) {
+    return Container(
+        padding: EdgeInsets.all(25),
+        decoration: BoxDecoration(
+            color: Colors.blue.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  post,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  from,
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text("-"),
+                Text(
+                  to,
+                  style: TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  status,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              desc,
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Container(
+              height: 1,
+              color: Colors.black45,
+              padding: EdgeInsets.symmetric(horizontal: 50),
+            ),
+
+          ],
+        ));
+  }
+
+  Widget SkillContainer(String field, String level) {
+    return Container(
+        padding: EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.blue.shade100,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              field,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(right: 60),
+                  height: 10,
+                  width: (MediaQuery.of(context).size.width / 1.5) *
+                      (int.parse(level) / 100),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "$level %",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 15,
+            ),
+          ],
+        ));
+  }
+
+  Widget EducationContainer(String degree, String institute, String from,
+      String to, String status, String desc) {
+    return Container(
+        padding: EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.blue.shade100,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              degree,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    institute,
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  width: 50,
+                ),
+                Text(
+                  from,
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text("-"),
+                Text(
+                  to,
+                  style: TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  status,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              desc,
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Container(
+              height: 1,
+              color: Colors.black45,
+              padding: EdgeInsets.symmetric(horizontal: 50),
+            ),
+
+          ],
+        ));
+  }
+
+  Widget ProjectContainer(String name, String link, String from, String to,
+      String status, String desc) {
+    return Container(
+        padding: EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.blue.shade100,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              link,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  from,
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text("-"),
+                Text(
+                  to,
+                  style: TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  status,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              desc,
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Container(
+              height: 1,
+              color: Colors.black45,
+              padding: EdgeInsets.symmetric(horizontal: 50),
+            ),
+
+          ],
+        ));
+  }
+
+  Widget AchievementContainer(
+      String title, String year, String issuer, String desc) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.blue.shade100,
+        ),
+        padding: EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              issuer,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              desc,
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Container(
+              height: 1,
+              color: Colors.black45,
+              padding: EdgeInsets.symmetric(horizontal: 50),
+            ),
+
+          ],
+        ));
+  }
+
   //====================================================================
   void initiateFacebookLogin() async {
     var facebookLogin = FacebookLogin();
@@ -162,8 +775,9 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.blue,
       onPressed: () async {
-        signInWithGoogle().then((result) {
+        signInWithGoogle().then((result) async {
           if (result != null) {
+            await getcache(det);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fyi_main2_2_1/articlepage.dart';
 import 'package:fyi_main2_2_1/showarticle.dart';
 import 'profilepage.dart';
+import 'login_page.dart' as login;
+
 class Testing extends StatefulWidget {
   String username;
   Testing(this.username);
@@ -72,10 +74,11 @@ class _TestingState extends State<Testing> {
             color: Colors.blue,
             onPressed: () {
               setState(() {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfileScreen(widget.username)),
+                      builder: (context) => ProfileScreen(login.about,login.dob,login.finaledu,login.email,login.finalexp,login.image,login.name,login.phone,login.finalskill,login.experienceexpandlist,login.skillexpandlist,login.educationexpandlist,login.achievementexpandlist,login.projectexpandlist)),
                 );
               });
             },

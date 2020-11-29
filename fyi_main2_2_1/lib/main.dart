@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FYI Mobile App',
-      home: ProfileScreen(""),
+      home: LoginPage(),
       routes: <String, WidgetBuilder>{
         '/a': (BuildContext context) => MyCustomForm(),
         '/b': (BuildContext context) => ImgSlide(),
