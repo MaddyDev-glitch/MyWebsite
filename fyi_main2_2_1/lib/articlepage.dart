@@ -5,7 +5,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+// import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'dart:core';
 import 'html_editor.dart';
 import 'package:flutter/foundation.dart';
@@ -18,18 +19,19 @@ var coverImgUrl;
 List<dynamic> arrays = [];
 double coverHeight = 350;
 double editorHeight = 0;
-
+int delete_count = 0;
 List majorSend = [];
 List type = [];
 List<GlobalKey<HtmlEditorState>> keyEditor1 =
     List<GlobalKey<HtmlEditorState>>(200);
-List<String> closeChecker = List<String>(200);
+// List<String> closeChecker = List<String>(200);
 int i = 1;
 String token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
 FormData formData;
 List<String> arrayData = List<String>(200);
 String cls = "X";
+var status;
 
 class Tag {
   String type;
@@ -87,7 +89,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
   // of the TextField.
   Future<File> imageFile;
   TextEditingController myTitle;
-  List<String> htmlData;
+  List<String> Htmldata;
   List<Widget> list = new List();
 
   String result = "";
@@ -138,20 +140,44 @@ class _MyCustomFormState extends State<MyCustomForm> {
         headers: {"x-auth-token": token, 'Content-Type': 'application/json'},
         body: body);
     print("${response.statusCode}");
+    status = response.statusCode;
     print("${response.body}");
     return response;
   }
 
+  // @override
+  // void initState() {
+  //   KeyboardVisibilityNotification().addNewListener(
+  //     onChange: (bool visible) {
+  //       print('keyboard $visible');
+  //       setState(() {
+  //         coverHeight = visible ? 170 : 350;
+  //       });
+  //     },
+  //   );
+  //   super.initState();
+  //   for (int z = 1; z <= 100; z++) {
+  //     keyEditor1[z] = GlobalKey();
+  //   }
+  //   myTitle = new TextEditingController(text: null);
+  //   // myContent = new TextEditingController(text: null);
+  // }
+
   @override
   void initState() {
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        print('keyboard $visible');
-        setState(() {
-          coverHeight = visible ? 170 : 350;
-        });
-      },
-    );
+    // KeyboardVisibilityNotification().addNewListener(
+    //   onChange: (bool visible) {
+    //     print('keyboard $visible');
+    //     setState(() {
+    //       coverHeight = visible ? 170 : 350;
+    //     });
+    //   },
+    // );
+    KeyboardVisibility.onChange.listen((bool visible) {
+      setState(() {
+        coverHeight = visible ? 170 : 350;
+      });
+    });
     super.initState();
     for (int z = 1; z <= 100; z++) {
       keyEditor1[z] = GlobalKey();
@@ -223,6 +249,52 @@ class _MyCustomFormState extends State<MyCustomForm> {
           actions: [
             new FlatButton(
               child: new Text('Got It'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showError() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Create Article'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: [
+                new Text(
+                  'Ah Snap :/',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  'Looks like something went wrong',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red.shade700),
+                ),
+                new SizedBox(
+                  height: 20,
+                ),
+                new Text('Try resubmitting your article'),
+              ],
+            ),
+          ),
+          actions: [
+            new FlatButton(
+              child: new Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -323,7 +395,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  void _removeConfirm(int deleteIndex) {
+  void _removeConfirm() {
     showDialog(
       context: context, barrierDismissible: false, // user must tap button!
 
@@ -350,17 +422,17 @@ class _MyCustomFormState extends State<MyCustomForm> {
                       fontWeight: FontWeight.w700,
                       color: Colors.red.shade700),
                 ),
-                // Container(
-                //     width: 280,
-                //     padding: EdgeInsets.all(10.0),
-                //     child: TextField(
-                //       maxLength: (list.length < 10) ? 1 : 2,
-                //       controller: number,
-                //       autocorrect: true,
-                //       keyboardType: TextInputType.number,
-                //       decoration: InputDecoration(
-                //           hintText: 'Box number you wish to remove'),
-                //     )),
+                Container(
+                    width: 280,
+                    padding: EdgeInsets.all(10.0),
+                    child: TextField(
+                      maxLength: (list.length < 10) ? 1 : 2,
+                      controller: number,
+                      autocorrect: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: 'Box number you wish to remove'),
+                    )),
                 // new Text('Your article has been successfully submitted'),
               ],
             ),
@@ -383,12 +455,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
               onPressed: () {
                 // list.removeLast();
                 // type.removeLast();
-                // String num = number.text;
-                // int numMinusone = int.parse(num) - 1;
+                String num = number.text;
+                int numMinusone = int.parse(num) - 1;
                 print(num);
                 setState(() {
-                  list.removeAt(deleteIndex - 1);
-                  type.removeAt(deleteIndex - 1);
+                  list.removeAt(numMinusone);
+                  type.removeAt(numMinusone);
                   if (list.length == 0) {
                     editorHeight = 0;
                   }
@@ -400,14 +472,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    // myContent.dispose();
-    myTitle.dispose();
-    super.dispose();
   }
 
   final number = TextEditingController();
@@ -572,53 +636,82 @@ class _MyCustomFormState extends State<MyCustomForm> {
                             color: Color.fromRGBO(255, 255, 255, 0.9),
                             fontWeight: FontWeight.w300)),
                     onPressed: () async {
+                      List temp;
+                      List typeArray;
+                      list.length = list.length + delete_count;
+                      print("${list.length}");
+                      // print("${list.}");
                       for (int j = 1; j <= list.length; j++) {
-                        var currentStateText =
-                            await keyEditor1[j].currentState.getText();
+                        var currentStateText;
+                        try {
+                          currentStateText =
+                              await keyEditor1[j].currentState.getText();
+                        } catch (xyz) {
+                          if (typeArray[j - 1] == 'image') {
+                            currentStateText =
+                                "https://upload.wikimedia.org/wikipedia/commons/3/3d/1_120_transparent.png";
+                          } else {
+                            currentStateText = "<br>";
+                            // continue;}
+                          }
+                        }
+
+                        var printo = currentStateText;
+                        print("printo==$printo");
+
                         arrayData[j] = currentStateText;
                         majorSend = [arrayData, list.length, type];
 
                         final List data = majorSend;
                         count = data[1]; //count
-                        List temp = data[0]; //
-                        List typeArray = data[2];
-                        List<Tag> tags = [];
-
-                        for (int i = 1; i <= count; i++) {
-                          if (typeArray[i - 1] == 'image') {
-                            print('print');
-                            print(temp[i].toString().substring(11));
-                            temp[i] = temp[i].toString().substring(11);
-                            temp[i] = temp[i].replaceAll("amp;", "");
-
-                            print(temp[i]);
-                          }
-                        }
-                        print("COUNT home page=$count");
-                        // List<String> arrayData = [];
-                        for (int j = 1; j <= count; j++) {
-                          print("SUCCESS my home page");
-                          // arrayData.add(temp[j]);
-                          tags.add(Tag(typeArray[j - 1], temp[j]));
-                          // print("REGULAR CHECK ==${arrayData.toString()}");
-
-                          Tag tempTag = Tag(typeArray[j - 1], temp[j]);
-                          Map jsonInsert = tempTag.toJson();
-
-                          arrays.add(jsonInsert);
-                        }
-                        print("arrays");
-                        print(arrays);
+                        temp = data[0]; //
+                        typeArray = data[2];
                       }
-                      if (myTitle.text != "") {
-                        //arrays.length != 0
+                      print("count=${count}");
+                      print("temp=${temp}");
+                      print("typearray=${typeArray}");
+
+                      // List<Tag> tags = [];
+
+                      for (int i = 1; i <= count; i++) {
+                        if (typeArray[i - 1] == 'image') {
+                          print('print');
+                          print(temp[i].toString().substring(11));
+                          temp[i] = temp[i].toString().substring(11);
+                          temp[i] = temp[i].replaceAll("amp;", "");
+
+                          print(temp[i]);
+                        }
+                      }
+                      print("COUNT home page=$count");
+                      // List<String> arrayData = [];
+                      for (int j = 1; j <= count; j++) {
+                        print("SUCCESS my home page");
+                        // arrayData.add(temp[j]);
+                        // tags.add(Tag(typeArray[j - 1], temp[j]));
+                        // print("REGULAR CHECK ==${arrayData.toString()}");
+                        Tag tempTag = Tag(typeArray[j - 1], temp[j]);
+                        Map jsonInsert = tempTag.toJson();
+                        print(jsonInsert);
+                        arrays.add(jsonInsert);
+                      }
+                      print("arrays");
+                      print(arrays);
+
+                      if (myTitle.text != "" &&editorHeight!=0) {
                         print("SUCCESS============");
                         await postRequest();
-                        setState(() {
-                          myTitle.clear();
-                          imageFile = null;
-                        });
-                        _showConfirm();
+                        if (status>=200 && status<300) {
+                          setState(() {
+                            myTitle.clear();
+                            imageFile = null;
+                            list.clear();
+                            editorHeight=0;
+                          });
+                          _showConfirm();
+                        } else {
+                          _showError();
+                        }
                       } else {
                         _showAlert();
                       }
@@ -697,9 +790,44 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                 color: Color(0x3382b7dc),
                               ),
                               child: ListView.builder(
+                                cacheExtent: 2000000,
+                                addAutomaticKeepAlives: true,
+                                addRepaintBoundaries: false,
                                 itemBuilder: (context, index) {
                                   Widget widget = list.elementAt(index);
-                                  return widget;
+                                  // return widget;
+                                  // return Dismissible(
+                                  //   key: Key(index.toString()),
+                                  //   child: widget,
+                                  // );
+                                  return KeepAlive(
+                                    keepAlive: true,
+                                    child: Dismissible(
+                                      key: ValueKey(list.length),
+
+                                      onDismissed: (direction) {
+                                        list.removeAt(index);
+                                        delete_count = delete_count + 1;
+                                        setState(() {
+                                          if (list.length == 0) {
+                                            editorHeight = 0;
+                                          }
+                                        });
+                                      },
+                                      // Show a red background as the item is swiped away.
+                                      // background: Container(color: Colors.red),
+                                    background: Container(
+                                    color: Colors.red.shade800,
+                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Icon(
+                                    Icons.delete,
+                                    size: 50,
+                                    color: Colors.white,
+                                    ),),
+                                      child: ListTile(title: widget),
+                                    ),
+                                  );
                                 },
                                 itemCount: list.length,
                               )),
@@ -715,6 +843,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     onPressed: () {
                                       setState(() {
                                         editorHeight = 500;
+                                        // list.add( input_tile(index: list.length,));
                                         type.add("text");
                                         list.add(
                                           Column(
@@ -791,15 +920,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
                             // ),
                           ],
                         ),
-
+                        //
                         // FlatButton(
                         //     color: Colors.blueGrey,
                         //     onPressed: () {
                         //       if (list.length == 0) {
                         //         _nullremoveError();
                         //       } else {
-                        //         _removeConfirm(
-                        //             list.length); 
+                        //         _removeConfirm();
                         //       }
                         //       // list.removeLast();
                         //       // type.removeLast();
@@ -823,12 +951,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                 height: 40,
                                 color: Colors.redAccent,
                                 onPressed: () {
-                                  if (list.length == 0) {
-                                    _nullremoveError();
-                                  } else {
-                                    showAlertDialog(context);
-                                    editorHeight = 0;
-                                  }
+                                  showAlertDialog(context);
+                                  editorHeight = 0;
                                 },
                                 child: Text("Reset",
                                     style: TextStyle(
@@ -918,8 +1042,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
-class Inputtile extends StatelessWidget {
-  const Inputtile({Key key, @required this.index}) : super(key: key);
+class input_tile extends StatelessWidget {
+  const input_tile({Key key, @required this.index}) : super(key: key);
   final int index;
 
   @override
