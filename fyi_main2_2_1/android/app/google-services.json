@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "213654932931-75u962akpufh22em55ppnc03c6uulf8v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fyi.vit",
+            "certificate_hash": "d60e44d42902f6e54f4101c0821a4d57830d41b0"
+          }
+        },
+        {
           "client_id": "213654932931-orp6u1buccdgph7uq1jmn1t19uup7feh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
