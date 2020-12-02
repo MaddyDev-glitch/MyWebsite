@@ -1,14 +1,16 @@
+import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyi_main2_2_1/demo.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:prompt_dialog/prompt_dialog.dart';
 
 String fileName = "CacheData.json";
 Response response;
@@ -152,39 +154,121 @@ class AchievementList {
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
-final fbLogin = FacebookLogin();
 bool isLoggedIn = false;
 var det = "";
 
-Future<String> signInWithGoogle() async {
+Future<String> signInWithGoogle(BuildContext context) async {
+  try{
   await Firebase.initializeApp();
-
+  var dio = Dio();
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
-
   final AuthCredential credential = GoogleAuthProvider.credential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
-
   final UserCredential authResult =
       await _auth.signInWithCredential(credential);
   final User user = authResult.user;
-
+  print("bye");
+  var res;
+  var phoneNumber;
+  var username;
   if (user != null) {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final User currentUser = _auth.currentUser;
-    assert(user.uid == currentUser.uid);
+    var currentUser = _auth.currentUser;
+    print(currentUser);
+    // await user.linkWithPhoneNumber("+911111111111");
+    print(user);
+    Map<String,dynamic> currentUser1={"uid":currentUser.uid,"xa":currentUser.refreshToken,"displayName":currentUser.displayName,"email":currentUser.email,"photoURL":currentUser.photoURL,"username":"","phoneNumber":""};
+    assert(user.uid == currentUser1['uid']);
+    try {
+        var emailCheck = await dio.post(
+          "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/emailCheck",
+          data:{ "email": currentUser1["email"] }
+        );
+        print(emailCheck.data);
+        username=emailCheck.data['username'];
+        var body = {
+          "google": true,
+          "token": await currentUser.getIdToken(),
+          "username": username,
+          "name": currentUser1['displayName'],
+          "email": currentUser1['email'],
+          "picture": currentUser1['photoURL'],
+          "phone": phoneNumber,
+        };
+        print(body);
 
-    print('signInWithGoogle succeeded: ${user}');
-    det = user.displayName;
-    return '${user.displayName}';
+        res = await dio.post(
+          "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
+          data:body,
+        );
+        print('signInWithGoogle succeeded: $res');
+        det = user.displayName;
+        return '${user.displayName}';
+      } catch(err) {
+        print(err);
+        var value = await prompt(context,title:Text("Enter a unique username"));
+        while (true) {
+          try {
+            await dio.get(
+              "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/checkUsernameAvailability/" +
+                value
+            );
+            break;
+          } catch (err) {
+            value = await prompt(context,
+              title:Text(value + " is Not available. Please try another one")
+            );
+          }
+        }
+        username=value;
+        phoneNumber = user.phoneNumber;
+        print(phoneNumber);
+        if (currentUser1['phoneNumber']=='' || currentUser1['phoneNumber']==null) {
+          phoneNumber = await prompt(context,title:Text("Enter your Mobile Number"));
+          var phone = "+91" + phoneNumber;
+          await _auth.verifyPhoneNumber(phoneNumber: phone,
+           verificationCompleted:(cred){
+             },
+             verificationFailed: (e){
+               print(e.toString());
+               print("error");
+              },
+              codeSent: (String verificationId, int resendToken) async {
+                String smsCode = await prompt(context,title:Text("Enter the OTP sent to your phone Number"));
+                PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+                await _auth.currentUser.linkWithCredential(phoneAuthCredential);
+                var body = {
+                "google": true,
+                "token": await currentUser.getIdToken(),
+                "username": username,
+                "name": currentUser1['displayName'],
+                "email": currentUser1['email'],
+                "picture": currentUser1['photoURL'],
+                "phone": phoneNumber,
+              };
+              res = await dio.post(
+                "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
+                data:body,
+              );
+                print('signInWithGoogle succeeded: $res');
+                det = user.displayName;
+                return '${user.displayName}';
+             
+              },
+              codeAutoRetrievalTimeout: (a)=>{print(2)}
+            );
+        }
+      }
+      
+  }}catch(err){
+    print(err);
   }
-
-  return null;
 }
 
 void signOutGoogle() async {
@@ -669,26 +753,117 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //====================================================================
-  void initiateFacebookLogin() async {
-    var facebookLogin = FacebookLogin();
-    var facebookLoginResult =
-        // await facebookLogin.logInWithReadPermissions(['name']);
-        await facebookLogin.logIn(["email"]);
-    print(facebookLoginResult.errorMessage);
-    print(facebookLoginResult.accessToken);
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.error:
-        print("Error");
-        onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print("CancelledByUser");
-        onLoginStatusChanged(false);
-        break;
-      case FacebookLoginStatus.loggedIn:
-        {
-          print("LoggedIn");
-          onLoginStatusChanged(true);
+  void initiateFacebookLogin(context) async {
+    final result = await  FacebookAuth.instance.login();
+    final FacebookAuthCredential facebookAuthCredential =
+      FacebookAuthProvider.credential(result.token);
+    await _auth.signInWithCredential(facebookAuthCredential);
+          print(_auth.currentUser);
+           final User user = _auth.currentUser;
+           var dio=Dio();
+  print("bye");
+  var res;
+  var phoneNumber;
+  var username;
+  if (user != null) {
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    var currentUser = _auth.currentUser;
+    print(currentUser);
+    // await user.linkWithPhoneNumber("+911111111111");
+    print(user);
+    Map<String,dynamic> currentUser1={"uid":currentUser.uid,"xa":currentUser.refreshToken,"displayName":currentUser.displayName,"email":currentUser.email,"photoURL":currentUser.photoURL,"username":"","phoneNumber":""};
+    assert(user.uid == currentUser1['uid']);
+    try {
+        var emailCheck = await dio.post(
+          "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/emailCheck",
+          data:{ "email": currentUser1["email"] }
+        );
+        print(emailCheck.data);
+        username=emailCheck.data['username'];
+        var body = {
+          "facebook": true,
+          "token": await currentUser.getIdToken(),
+          "username": username,
+          "name": currentUser1['displayName'],
+          "email": currentUser1['email'],
+          "picture": currentUser1['photoURL'],
+          "phone": phoneNumber,
+        };
+        print(body);
+
+        res = await dio.post(
+          "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
+          data:body,
+        );
+        print(res);
+        
+        print('signInWithFacebook succeeded: $res');
+        det = user.displayName;
+      } catch(err) {
+        print(err);
+        var value = await prompt(context,title:Text("Enter a unique username"));
+        while (true) {
+          try {
+            await dio.get(
+              "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/checkUsernameAvailability/" +
+                value
+            );
+            break;
+          } catch (err) {
+            value = await prompt(context,
+              title:Text(value + " is Not available. Please try another one")
+            );
+          }
+        }
+        username=value;
+        phoneNumber = user.phoneNumber;
+        print(phoneNumber);
+        if (currentUser1['phoneNumber']=='' || currentUser1['phoneNumber']==null) {
+          phoneNumber = await prompt(context,title:Text("Enter your Mobile Number"));
+          var phone = "+91" + phoneNumber;
+          print(phone);
+          await _auth.verifyPhoneNumber(phoneNumber: phone,
+           verificationCompleted:(cred){
+             },
+             verificationFailed: (e){
+               print(e.toString());
+               print("error");
+              },
+              codeSent: (String verificationId, int resendToken) async {
+                String smsCode = await prompt(context,title:Text("Enter the OTP sent to your phone Number"));
+                PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+                print("phoneAuthCredential"+phoneAuthCredential.toString());
+                await _auth.currentUser.linkWithCredential(phoneAuthCredential);
+                var body = {
+                "facebook": true,
+                "token": await currentUser.getIdToken(),
+                "username": username,
+                "name": currentUser1['displayName'],
+                "email": currentUser1['email'],
+                "picture": currentUser1['photoURL'],
+                "phone": phoneNumber,
+              };
+              print(body);
+
+              res = await dio.post(
+                "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
+                data:body,
+              );
+              print(res);
+              
+                print('signInWithFacebook succeeded: $res');
+                det = user.displayName;
+             
+              },
+              codeAutoRetrievalTimeout: (a)=>{print(2)}
+            );
+          print("auth");
+        }
+      }
+  }
+  
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
@@ -696,10 +871,9 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
           );
-          break;
         }
-    }
-  }
+    
+  
 
   void onLoginStatusChanged(bool isLoggedIn) {
     setState(() {
@@ -775,7 +949,7 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.blue,
       onPressed: () async {
-        signInWithGoogle().then((result) async {
+        signInWithGoogle(context).then((result) async {
           if (result != null) {
             await getcache(det);
             Navigator.of(context).push(
@@ -818,7 +992,7 @@ class _LoginPageState extends State<LoginPage> {
     return OutlineButton(
       splashColor: Colors.blue,
       onPressed: () {
-        initiateFacebookLogin();
+        initiateFacebookLogin(context);
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
