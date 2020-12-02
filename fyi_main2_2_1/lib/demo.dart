@@ -74,7 +74,7 @@ class _TestingState extends State<Testing> {
             color: Colors.blue,
             onPressed: () {
               setState(() {
-
+print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo ${login.image}");
                 Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -11,17 +11,18 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:prompt_dialog/prompt_dialog.dart';
+var username;
 
 String fileName = "CacheData.json";
 Response response;
 String token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
+    "";
 var educationJson;
 var about;
 var skillsJson;
 var projectsJson;
 var dob;
-var phone;
+String phone;
 var name;
 var achievementsJson;
 var image;
@@ -174,7 +175,6 @@ Future<String> signInWithGoogle(BuildContext context) async {
   print("bye");
   var res;
   var phoneNumber;
-  var username;
   if (user != null) {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
@@ -209,6 +209,8 @@ Future<String> signInWithGoogle(BuildContext context) async {
         );
         print('signInWithGoogle succeeded: $res');
         det = user.displayName;
+        token=res.data['token'];
+        print("TOKEN BS: $token");
         return '${user.displayName}';
       } catch(err) {
         print(err);
@@ -287,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
     var dio = Dio();
     try {
       response = await dio.get(
-        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/behaal_baalak",
+        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/$username",
         queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
       );
       print("GETHHTTP fucntion print -> $response");
@@ -303,7 +305,7 @@ class _LoginPageState extends State<LoginPage> {
       dob = body['dob'];
       phone = body['phone'];
       name = body['name'];
-      image = body['image'];
+      image = body['picture'];
       email = body['email'];
       var tempexperience = experienceJson;
       var tempskill = skillsJson;
@@ -472,12 +474,13 @@ class _LoginPageState extends State<LoginPage> {
             finalproject[i].status,
             finalproject[i].description));
       }
+      print("found");
       print(finalexp[0].organization);
       print(image);
     }
     //TODO: If the Json file does not exist, then make the API Call
     else {
-      gethttp(userloginname);
+      gethttp(det);
     }
   }
 
@@ -952,7 +955,7 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () async {
         signInWithGoogle(context).then((result) async {
           if (result != null) {
-            await getcache(det);
+            await gethttp(det);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {

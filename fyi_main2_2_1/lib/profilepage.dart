@@ -22,8 +22,9 @@ List<Widget> projectexpandlist = new List();
 List<Widget> achievementexpandlist = new List();
 List<Expanditem> items;
 Response response;
-String token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYmVoYWFsX2JhYWxhayJ9LCJpYXQiOjE2MDY4MTA0NDJ9.nNqNv9KkAGoO59dVQOZrdezSJ58CeoH5RtRnt-lQOGY";
+// String token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiN0ozTGlhOElrb05wNTFRY2t4UUlQZWN4WmJIMyJ9LCJpYXQiOjE2MDY5MzQ5NDJ9.Kmk_vx_OClEYGNj6uf7gcyqAm-4f-oORCS6_dRjcC8E";
+// "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiN0ozTGlhOElrb05wNTFRY2t4UUlQZWN4WmJIMyJ9LCJpYXQiOjE2MDY5MzU2NDd9.nKv_fGu0sIQZJ_wpCf1NwNlcwob4F_XBoCH6JsAek3A"
+String token=login.token;
 double contheight = 300;
 var educationJson;
 var about;
@@ -252,6 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    print("TOKEN: ${login.token}");
     name = widget.kname;
     phone = widget.kphone;
     image = widget.kimage;
@@ -268,9 +270,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     educationexpandlist = widget.educationwidget;
     achievementexpandlist = widget.achievementwidget;
     projectexpandlist = widget.projectwidget;
-    print(projectexpandlist[0]);
-    print(finalexp[0].organization);
-    print(widget.kexplist[0].organization);
+    // print(projectexpandlist[0]);
+    // print(finalexp[0].organization);
+    // print(widget.kexplist[0].organization);
     print(image);
     print(widget.kimage);
 
@@ -516,27 +518,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
         {
           edutags.add(EduTag(finaledu[i].degree, finaledu[i].institute, finaledu[i].from, finaledu[i].to, finaledu[i].status, finaledu[i].description));
         }
-      String jsonEdu = jsonEncode(edutags);
+      var jsonEdutemp = json.encode(edutags);
+      var jsonEdu=jsonDecode(jsonEdutemp);
       for(int i=0;i<finalexp.length;i++)
       {
         exptags.add(ExpTag( finalexp[i].organization,finalexp[i].post, finalexp[i].from, finalexp[i].to, finalexp[i].status, finalexp[i].description));
       }
-      String jsonExp = jsonEncode(exptags);
+      String jsonExptemp = jsonEncode(exptags);
+      var jsonExp=jsonDecode(jsonExptemp);
+
       for(int i=0;i<finalskill.length;i++)
       {
         skitags.add(SkillsTag( finalskill[i].field,finalskill[i].level));
       }
-      String jsonskill = jsonEncode(skitags);
+      String jsonskilltemp = jsonEncode(skitags);
+      var jsonskill=jsonDecode(jsonskilltemp);
+
       for(int i=0;i<finalproject.length;i++)
       {
         protags.add(ProjectsTag(finalproject[i].description, finalproject[i].status,finalproject[i].from,finalproject[i].to,finalproject[i].link,finalproject[i].name));
       }
-      String jsonproject = jsonEncode(protags.toString());
+      String jsonprojecttemp = jsonEncode(protags);
+      var jsonproject=jsonDecode(jsonprojecttemp);
+
       for(int i=0;i<finalachieve.length;i++)
       {
         achtags.add(AchieveTag(finalachieve[i].description,finalachieve[i].title,finalachieve[i].year,finalachieve[i].issuer));
       }
-      String jsonachive = jsonEncode(achtags);
+      String jsonachivetemp = jsonEncode(achtags);
+      var jsonachive=jsonDecode(jsonachivetemp);
+
       // List<dynamic> arrays_education = [];
       List<dynamic> arrays_experience = [];
       List<dynamic> arrays_skills = [];
@@ -588,7 +599,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "google": true,
         };
         Map finaldata = {"profile": data};
+        print("FINAL DATA");
         print(finaldata);
+        // var jsonfinaldata = jsonEncode(finaldata);
+        // print("DO NOT FINAL JSON DATA");
+
+        // print(jsonfinaldata);
         try {
           print("SUPER TRY");
           Response response = await dio.put(

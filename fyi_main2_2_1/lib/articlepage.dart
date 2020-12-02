@@ -10,6 +10,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'dart:core';
 import 'html_editor.dart';
 import 'package:flutter/foundation.dart';
+import 'login_page.dart' as login;
 
 const String submitUrl =
     'https://us-central1-fyi-vitc.cloudfunctions.net//api/article/createArticle';
@@ -26,8 +27,7 @@ List<GlobalKey<HtmlEditorState>> keyEditor1 =
     List<GlobalKey<HtmlEditorState>>(200);
 // List<String> closeChecker = List<String>(200);
 int i = 1;
-String token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
+String token =login.token;
 FormData formData;
 List<String> arrayData = List<String>(200);
 String cls = "X";
