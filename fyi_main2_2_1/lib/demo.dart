@@ -78,7 +78,7 @@ class _TestingState extends State<Testing> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfileScreen(login.about,login.dob,login.finaledu,login.email,login.finalexp,login.image,login.name,login.phone,login.finalskill,login.experienceexpandlist,login.skillexpandlist,login.educationexpandlist,login.achievementexpandlist,login.projectexpandlist)),
+                      builder: (context) => ProfileScreen(login.about,login.dob,login.finaledu,login.email,login.finalexp,login.image,login.name,login.phone,login.finalskill,login.experienceexpandlist,login.skillexpandlist,login.educationexpandlist,login.achievementexpandlist,login.projectexpandlist,login.finalachievement,login.finalproject)),
                 );
               });
             },

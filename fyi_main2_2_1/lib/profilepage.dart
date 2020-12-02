@@ -13,15 +13,17 @@ String fileName = "CacheData.json";
 List<login.ExperienceList> finalexp;
 List<login.EducationList> finaledu;
 List<login.SkillsList> finalskill;
+List<login.ProjectList> finalproject;
+List<login.AchievementList> finalachieve;
 List<Widget> experienceexpandlist = new List();
 List<Widget> skillexpandlist = new List();
 List<Widget> educationexpandlist = new List();
-List<Widget> projectexpandlist= new List();
-List<Widget> achievementexpandlist= new List();
+List<Widget> projectexpandlist = new List();
+List<Widget> achievementexpandlist = new List();
 List<Expanditem> items;
 Response response;
 String token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDlZWUpmRlQyblo5QU9jM3BvZDlHbnEwdWwwMiJ9LCJpYXQiOjE2MDE3MTQ0NzJ9.dLU-k1kJkEWNtJT9NhkciM-SJAZ-Fdrl1WZNrA24mR8";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYmVoYWFsX2JhYWxhayJ9LCJpYXQiOjE2MDY4MTA0NDJ9.nNqNv9KkAGoO59dVQOZrdezSJ58CeoH5RtRnt-lQOGY";
 double contheight = 300;
 var educationJson;
 var about;
@@ -43,17 +45,19 @@ class Expanditem {
   Expanditem(this.isExpanded, this.header, this.body, this.iconpic);
 }
 
-
 class ProfileScreen extends StatefulWidget {
   String kname;
   String kimage;
   String kemail;
-  int kphone;
+  String kphone;
   String kdob;
   String kabout;
   List<login.EducationList> kedulist;
   List<login.SkillsList> kskilllist;
   List<login.ExperienceList> kexplist;
+  List<login.AchievementList> kachlist;
+  List<login.ProjectList> kprolist;
+
   List<Widget> experiencewidget;
   List<Widget> skillwidget;
   List<Widget> educationwidget;
@@ -71,9 +75,99 @@ class ProfileScreen extends StatefulWidget {
       this.kskilllist,
       this.experiencewidget,
       this.skillwidget,
-      this.educationwidget,this.achievementwidget,this.projectwidget);
+      this.educationwidget,
+      this.achievementwidget,
+      this.projectwidget,
+      this.kachlist,
+      this.kprolist);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
+}
+class EduTag {
+  String degree;
+  String institute;
+  String from;
+  String to;
+  String status;
+  String desc;
+
+  EduTag(this.degree, this.institute,this.from,this.to,this.status,this.desc);
+
+  Map toJson() => {
+    "degree": degree,
+    "description": desc,
+    "from": from,
+    "to": to,
+    "status": status,
+    "institute": institute,
+  };
+}
+class ExpTag {
+  String organization;
+  String post;
+  String from;
+  String to;
+  String status;
+  String desc;
+
+  ExpTag(this.organization, this.post,this.from,this.to,this.status,this.desc);
+
+  Map toJson() => {
+    "organization": organization,
+    "description": desc,
+    "from": from,
+    "to": to,
+    "status": status,
+    "post": post,
+  };
+}
+class SkillsTag {
+  String field;
+  String value;
+
+
+  SkillsTag(this.field, this.value);
+
+  Map toJson() => {
+    "field": field,
+    "value":value,
+  };
+}
+class ProjectsTag {
+  String status;
+  String to;
+  String from;
+  String link;
+  String desc;
+  String name;
+
+
+  ProjectsTag(this.desc, this.status,this.from,this.to,this.link,this.name);
+
+  Map toJson() => {
+    "description": desc,
+    "status":status,
+    "from": from,
+    "to":to,
+    "link": link,
+    "name":name,
+  };
+}
+class AchieveTag {
+  String issuer;
+  String year;
+  String desc;
+  String title;
+
+
+  AchieveTag(this.desc, this.title,this.year,this.issuer);
+
+  Map toJson() => {
+    "description": desc,
+    "title":title,
+    "year": year,
+    "issuer":issuer,
+      };
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -167,11 +261,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     finaledu = widget.kedulist;
     finalskill = widget.kskilllist;
     finalexp = widget.kexplist;
+    finalachieve=widget.kachlist;
+    finalproject=widget.kprolist;
     experienceexpandlist = widget.experiencewidget;
     skillexpandlist = widget.skillwidget;
     educationexpandlist = widget.educationwidget;
-    achievementexpandlist=widget.achievementwidget;
-    projectexpandlist=widget.projectwidget;
+    achievementexpandlist = widget.achievementwidget;
+    projectexpandlist = widget.projectwidget;
     print(projectexpandlist[0]);
     print(finalexp[0].organization);
     print(widget.kexplist[0].organization);
@@ -189,13 +285,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     ListView.builder(
-                      shrinkWrap: true,
+                        shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-
                         itemCount: educationexpandlist.length,
                         itemBuilder: (context, int index) {
-                          Widget widget =
-                              educationexpandlist.elementAt(index);
+                          Widget widget = educationexpandlist.elementAt(index);
                           return widget;
                         })
                     // functioneducation(),
@@ -213,15 +307,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                ListView.builder(
-                  shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: experienceexpandlist.length,
-                    itemBuilder: (context, int index) {
-                      Widget widget = experienceexpandlist.elementAt(index);
-                      return widget;
-                    })
-              ])), // body
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: experienceexpandlist.length,
+                        itemBuilder: (context, int index) {
+                          Widget widget = experienceexpandlist.elementAt(index);
+                          return widget;
+                        })
+                  ])), // body
           Icon(
             Icons.work,
             color: Colors.blue,
@@ -263,7 +357,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: achievementexpandlist.length,
                         itemBuilder: (context, int index) {
-                          Widget widget = achievementexpandlist.elementAt(index);
+                          Widget widget =
+                              achievementexpandlist.elementAt(index);
                           return widget;
                         })
                     // functioneducation(),
@@ -297,6 +392,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ) // iconPic
           ),
     ];
+
+    // Map mapedu = {
+    //   "degree": finaledu[0].degree,
+    //   "description": finaledu[0].description,
+    //   "from": finaledu[0].from,
+    //   "to": finaledu[0].to,
+    //   "status": finaledu[0].status,
+    //   "institute": finaledu[0].institute,
+    // };
   }
 
   Widget _profileText() {
@@ -399,6 +503,237 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     imagepadtop = MediaQuery.of(context).size.width / 4;
 
+    void _editprofile() {
+      print(finaledu);
+      print(finalproject);
+      List<EduTag> edutags = [];
+      List<ExpTag> exptags = [];
+      List<SkillsTag> skitags = [];
+      List<ProjectsTag> protags = [];
+      List<AchieveTag> achtags = [];
+
+      for(int i=0;i<finaledu.length;i++)
+        {
+          edutags.add(EduTag(finaledu[i].degree, finaledu[i].institute, finaledu[i].from, finaledu[i].to, finaledu[i].status, finaledu[i].description));
+        }
+      String jsonEdu = jsonEncode(edutags);
+      for(int i=0;i<finalexp.length;i++)
+      {
+        exptags.add(ExpTag( finalexp[i].organization,finalexp[i].post, finalexp[i].from, finalexp[i].to, finalexp[i].status, finalexp[i].description));
+      }
+      String jsonExp = jsonEncode(exptags);
+      for(int i=0;i<finalskill.length;i++)
+      {
+        skitags.add(SkillsTag( finalskill[i].field,finalskill[i].level));
+      }
+      String jsonskill = jsonEncode(skitags);
+      for(int i=0;i<finalproject.length;i++)
+      {
+        protags.add(ProjectsTag(finalproject[i].description, finalproject[i].status,finalproject[i].from,finalproject[i].to,finalproject[i].link,finalproject[i].name));
+      }
+      String jsonproject = jsonEncode(protags.toString());
+      for(int i=0;i<finalachieve.length;i++)
+      {
+        achtags.add(AchieveTag(finalachieve[i].description,finalachieve[i].title,finalachieve[i].year,finalachieve[i].issuer));
+      }
+      String jsonachive = jsonEncode(achtags);
+      // List<dynamic> arrays_education = [];
+      List<dynamic> arrays_experience = [];
+      List<dynamic> arrays_skills = [];
+      List<dynamic> arrays_achievement = [];
+      List<dynamic> arrays_project = [];
+
+      DateTime selectedDate = DateTime.now();
+      _selectDate(BuildContext context) async {
+        final DateTime picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate, // Refer step 1
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2050),
+        );
+        if (picked != null && picked != selectedDate)
+          setState(() {
+            selectedDate = picked;
+          });
+      }
+
+      final nameController = TextEditingController();
+      final phoneController = TextEditingController();
+      final aboutController = TextEditingController();
+      final emailController = TextEditingController();
+      final dobController = TextEditingController();
+
+      nameController.text = widget.kname;
+      phoneController.text = widget.kphone.toString();
+      aboutController.text = widget.kabout;
+      emailController.text = widget.kemail;
+      dobController.text = widget.kdob;
+
+      void updateprofile() async {
+        var dio = Dio();
+        dio.options.headers['content-Type'] = 'application/json';
+        dio.options.headers["x-auth-token"] = "$token";
+        Map data = {
+          "name": nameController.text,
+          "about": aboutController.text,
+          "picture": widget.kimage,
+          "email": emailController.text,
+          "phone": phoneController.text,
+          "dob": dobController.text,
+          "education": jsonEdu,
+          "achievements":jsonachive ,
+          "skills": jsonskill,
+          "projects": jsonproject,
+          "experience": jsonExp,
+          "google": true,
+        };
+        Map finaldata = {"profile": data};
+        print(finaldata);
+        try {
+          print("SUPER TRY");
+          Response response = await dio.put(
+            "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile",
+          data:finaldata,
+          );
+          var result = response.data;
+          print(result);
+        } catch (e) {
+          print(e);
+          print("ERROR");
+        }
+      }
+
+      showDialog(
+        context: context, barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            insetPadding: EdgeInsets.all(5),
+            title: new Text('Edit profile'),
+            content: Container(
+              height: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Name",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextField(
+                      controller: nameController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text("Phone",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextField(
+                      controller: phoneController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text("About",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextField(
+                      maxLines: 5,
+                      controller: aboutController,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectDate(context);
+                          });
+                        },
+                        child: Text("Date of Birth",
+                            style: TextStyle(fontWeight: FontWeight.bold))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text("Education",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                      height: 200,
+                      child: ListView.builder(
+                        cacheExtent: 2000000,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: false,
+                        itemBuilder: (context, index) {
+                          Widget widget = educationexpandlist.elementAt(index);
+                          // return widget;
+                          // return Dismissible(
+                          //   key: Key(index.toString()),
+                          //   child: widget,
+                          // );
+                          return KeepAlive(
+                            keepAlive: true,
+                            child: Dismissible(
+                              key: ValueKey(educationexpandlist.length),
+
+                              onDismissed: (direction) {
+                                educationexpandlist.removeAt(index);
+                                // delete_count = delete_count + 1;
+                                setState(() {
+                                  // if (list.length == 0) {
+                                  //   // editorHeight = 0;
+                                  // }
+                                });
+                              },
+                              // Show a red background as the item is swiped away.
+                              // background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red.shade800,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ListTile(title: widget),
+                            ),
+                          );
+                        },
+                        itemCount: educationexpandlist.length,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              new FlatButton(
+                child: new Text('Nah, I\'d like to keep it'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text(
+                  'Save Changes',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue.shade700),
+                ),
+                onPressed: () async{
+                  await updateprofile();
+                  setState(() {
+                    Navigator.of(context).pop();
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -416,6 +751,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               _profileText(),
+              FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      _editprofile();
+                    });
+                  },
+                  child: Text("EDIT")),
               // _circleAvatar(),
               _textFormFieldCalling(),
             ],

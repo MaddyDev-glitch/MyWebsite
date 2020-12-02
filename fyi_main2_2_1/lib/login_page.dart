@@ -376,6 +376,7 @@ class _LoginPageState extends State<LoginPage> {
             finalachievement[i].description));
       }
       for (int i = 0; i < finalproject.length; i++) {
+        print("HOLA");
         if (finalproject[i].status.toLowerCase() == "completed") {
           finalproject[i].status = " ";
         }
