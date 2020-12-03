@@ -37,6 +37,11 @@ var achievementsJson;
 var image;
 var email;
 var experienceJson;
+double eduHeight=200;
+double expHeight=200;
+double skiHeight=200;
+double achHeight=200;
+double proHeight=200;
 
 class Expanditem {
   bool isExpanded;
@@ -124,14 +129,14 @@ class ExpTag {
 }
 class SkillsTag {
   String field;
-  String value;
+  int value;
 
 
   SkillsTag(this.field, this.value);
 
   Map toJson() => {
     "field": field,
-    "value":value,
+    "level":value,
   };
 }
 class ProjectsTag {
@@ -270,7 +275,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     educationexpandlist = widget.educationwidget;
     achievementexpandlist = widget.achievementwidget;
     projectexpandlist = widget.projectwidget;
-    // print(projectexpandlist[0]);
+
+    print(projectexpandlist.length);
+    print(experienceexpandlist.length);
+    print(skillexpandlist.length);
     // print(finalexp[0].organization);
     // print(widget.kexplist[0].organization);
     print(image);
@@ -529,7 +537,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       for(int i=0;i<finalskill.length;i++)
       {
-        skitags.add(SkillsTag( finalskill[i].field,finalskill[i].level));
+        skitags.add(SkillsTag( finalskill[i].field,int.parse(finalskill[i].level)));
       }
       String jsonskilltemp = jsonEncode(skitags);
       var jsonskill=jsonDecode(jsonskilltemp);
@@ -549,10 +557,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       var jsonachive=jsonDecode(jsonachivetemp);
 
       // List<dynamic> arrays_education = [];
-      List<dynamic> arrays_experience = [];
-      List<dynamic> arrays_skills = [];
-      List<dynamic> arrays_achievement = [];
-      List<dynamic> arrays_project = [];
+      // List<dynamic> arrays_experience = [];
+      // List<dynamic> arrays_skills = [];
+      // List<dynamic> arrays_achievement = [];
+      // List<dynamic> arrays_project = [];
 
       DateTime selectedDate = DateTime.now();
       _selectDate(BuildContext context) async {
@@ -673,30 +681,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text("Education",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Container(
-                      height: 200,
+                      height: eduHeight,
                       child: ListView.builder(
-                        cacheExtent: 2000000,
-                        addAutomaticKeepAlives: true,
-                        addRepaintBoundaries: false,
+                        // cacheExtent: 2000000,
+                        // addAutomaticKeepAlives: true,
+                        // addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
                           Widget widget = educationexpandlist.elementAt(index);
-                          // return widget;
-                          // return Dismissible(
-                          //   key: Key(index.toString()),
-                          //   child: widget,
-                          // );
                           return KeepAlive(
                             keepAlive: true,
                             child: Dismissible(
                               key: ValueKey(educationexpandlist.length),
-
                               onDismissed: (direction) {
-                                educationexpandlist.removeAt(index);
+
                                 // delete_count = delete_count + 1;
                                 setState(() {
-                                  // if (list.length == 0) {
-                                  //   // editorHeight = 0;
-                                  // }
+                                  educationexpandlist.removeAt(index);
+                                  edutags.removeAt(index);
+                                  print(educationexpandlist.length);
+                                  if (educationexpandlist.length == 0) {
+                                    eduHeight = 0;
+                                    print("SET ZERO");
+                                  }
                                 });
                               },
                               // Show a red background as the item is swiped away.
@@ -717,7 +723,189 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         itemCount: educationexpandlist.length,
                       ),
-                    )
+                    ),
+                    Text("Experience",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                      height: eduHeight,
+                      child: ListView.builder(
+                        cacheExtent: 2000000,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: false,
+                        itemBuilder: (context, index) {
+                          Widget widget = experienceexpandlist.elementAt(index);
+                          return KeepAlive(
+                            keepAlive: true,
+                            child: Dismissible(
+                              key: ValueKey(experienceexpandlist.length),
+
+                              onDismissed: (direction) {
+
+
+                                // delete_count = delete_count + 1;
+                                setState(() {
+                                  experienceexpandlist.removeAt(index);
+                                  exptags.removeAt(index);
+                                  if (experienceexpandlist.length == 0) {
+                                    expHeight = 0;
+                                  }
+                                });
+                              },
+                              // Show a red background as the item is swiped away.
+                              // background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red.shade800,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ListTile(title: widget),
+                            ),
+                          );
+                        },
+                        itemCount: experienceexpandlist.length,
+                      ),
+                    ),
+                    Text("Achievements",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                      height: achHeight,
+                      child: ListView.builder(
+                        cacheExtent: 2000000,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: false,
+                        itemBuilder: (context, index) {
+                          Widget widget = achievementexpandlist.elementAt(index);
+                          return KeepAlive(
+                            keepAlive: true,
+                            child: Dismissible(
+                              key: ValueKey(achievementexpandlist.length),
+
+                              onDismissed: (direction) {
+
+
+                                // delete_count = delete_count + 1;
+                                setState(() {
+                                  achievementexpandlist.removeAt(index);
+                                  achtags.removeAt(index);
+                                  if (achievementexpandlist.length == 0) {
+                                    expHeight = 0;
+                                  }
+                                });
+                              },
+                              // Show a red background as the item is swiped away.
+                              // background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red.shade800,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ListTile(title: widget),
+                            ),
+                          );
+                        },
+                        itemCount: achievementexpandlist.length,
+                      ),
+                    ),
+                    Text("Skills",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                      height: skiHeight,
+                      child: ListView.builder(
+                        cacheExtent: 2000000,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: false,
+                        itemBuilder: (context, index) {
+                          Widget widget = skillexpandlist.elementAt(index);
+                          return KeepAlive(
+                            keepAlive: true,
+                            child: Dismissible(
+                              key: ValueKey(skillexpandlist.length),
+
+                              onDismissed: (direction) {
+                                // delete_count = delete_count + 1;
+                                setState(() {
+                                  skillexpandlist.removeAt(index);
+                                  skitags.removeAt(index);
+                                  if (skillexpandlist.length == 0) {
+                                    expHeight = 0;
+                                  }
+                                });
+                              },
+                              // Show a red background as the item is swiped away.
+                              // background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red.shade800,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ListTile(title: widget),
+                            ),
+                          );
+                        },
+                        itemCount: skillexpandlist.length,
+                      ),
+                    ),
+                    Text("Projects",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                      height: proHeight,
+                      child: ListView.builder(
+                        cacheExtent: 2000000,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: false,
+                        itemBuilder: (context, index) {
+                          Widget widget = projectexpandlist.elementAt(index);
+                          return KeepAlive(
+                            keepAlive: true,
+                            child: Dismissible(
+                              key: ValueKey(projectexpandlist.length),
+
+                              onDismissed: (direction) {
+
+
+                                // delete_count = delete_count + 1;
+                                setState(() {
+                                  projectexpandlist.removeAt(index);
+                                  protags.removeAt(index);
+                                  if (projectexpandlist.length == 0) {
+                                    expHeight = 0;
+                                  }
+                                });
+                              },
+                              // Show a red background as the item is swiped away.
+                              // background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red.shade800,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ListTile(title: widget),
+                            ),
+                          );
+                        },
+                        itemCount: projectexpandlist.length,
+                      ),
+                    ),
                   ],
                 ),
               ),

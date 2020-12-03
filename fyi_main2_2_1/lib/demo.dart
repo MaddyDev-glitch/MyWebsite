@@ -74,7 +74,41 @@ class _TestingState extends State<Testing> {
             color: Colors.blue,
             onPressed: () {
               setState(() {
-print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo ${login.image}");
+print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo ${login.image} , ${login.finalproject}");
+if(login.image==null)
+  {
+    login.image="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg";
+  }
+// if(login.finalproject==null)
+//   {login.finalproject=[];}
+// if(login.finalachievement==null)
+//   {login.finalachievement=[];}
+// if(login.finalskill==null)
+//   {login.finalskill=[];}
+// if(login.finaledu==null)
+//   {login.finaledu=[];}
+// if(login.finalexp==null)
+//   {login.finalexp=[];}
+// if(login.about==null)
+//   {
+//     login.about="";
+//   }
+// if(login.dob==null)
+// {
+//   login.dob="";
+// }
+// if(login.email==null)
+// {
+//   login.email="";
+// }
+// if(login.name==null)
+// {
+//   login.name="";
+// }
+// if(login.phone==null)
+// {
+//   login.phone="";
+// }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
