@@ -312,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
       var tempedu = educationJson;
       var tempach = achievementsJson;
       var temppro = projectsJson;
+      print(projectsJson);
       finalexp = tempexperience
           .map<ExperienceList>((json) => ExperienceList.fromJson(json))
           .toList();
@@ -327,6 +328,7 @@ class _LoginPageState extends State<LoginPage> {
       finalachievement = tempach
           .map<AchievementList>((json) => AchievementList.fromJson(json))
           .toList();
+      print("${finalproject.length},${finaledu.length},${finalexp.length}, ${finalachievement.length}, ${finalskill.length}");
       for (int i = 0; i < finalexp.length; i++) {
         if (finalexp[i].status.toLowerCase() == "completed") {
           finalexp[i].status = " ";
@@ -340,6 +342,7 @@ class _LoginPageState extends State<LoginPage> {
             finalexp[i].description));
       }
       for (int i = 0; i < finalskill.length; i++) {
+        print("hello");
         skillexpandlist
             .add(SkillContainer(finalskill[i].field, finalskill[i].level));
       }
@@ -374,10 +377,12 @@ class _LoginPageState extends State<LoginPage> {
             finalproject[i].status,
             finalproject[i].description));
       }
-      var tempDir = await getTemporaryDirectory();
-      File file = new File(tempDir.path + "/" + fileName);
-      file.writeAsString(response.toString(),
-          flush: true, mode: FileMode.write);
+print("see here");
+      print(skillexpandlist.length);
+      // var tempDir = await getTemporaryDirectory();
+      // File file = new File(tempDir.path + "/" + fileName);
+      // file.writeAsString(response.toString(),
+      //     flush: true, mode: FileMode.write);
     } catch (e) {
       print(e);
       print("ERROR");
@@ -796,7 +801,10 @@ class _LoginPageState extends State<LoginPage> {
           "phone": phoneNumber,
         };
         print(body);
-
+        name=username;    //login.name
+        phone=phoneNumber;
+        email=currentUser1['email'];
+        image=currentUser1['photoURL'];
         res = await dio.post(
           "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
           data:body,
@@ -805,6 +813,7 @@ class _LoginPageState extends State<LoginPage> {
         
         print('signInWithFacebook succeeded: $res');
         det = user.displayName;
+        token=res.data['token'];
       } catch(err) {
         print(err);
         var value = await prompt(context,title:Text("Enter a unique username"));
@@ -822,7 +831,11 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
         username=value;
+        name=value;    //login.name
         phoneNumber = user.phoneNumber;
+        phone=user.phoneNumber;
+        email=currentUser1['email'];
+        image=currentUser1['photoURL'];
         print(phoneNumber);
         if (currentUser1['phoneNumber']=='' || currentUser1['phoneNumber']==null) {
           phoneNumber = await prompt(context,title:Text("Enter your Mobile Number"));
@@ -859,7 +872,10 @@ class _LoginPageState extends State<LoginPage> {
               
                 print('signInWithFacebook succeeded: $res');
                 det = user.displayName;
-             
+                name=value;    //login.name
+                phone=user.phoneNumber;
+                email=currentUser1['email'];
+                image=currentUser1['photoURL'];
               },
               codeAutoRetrievalTimeout: (a)=>{print(2)}
             );
