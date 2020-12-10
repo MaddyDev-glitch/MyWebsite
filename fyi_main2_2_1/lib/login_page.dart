@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +21,7 @@ var about;
 var skillsJson;
 var projectsJson;
 var dob;
-String phone;
+var phone;
 var name;
 var achievementsJson;
 var image;
@@ -69,7 +68,7 @@ class ExperienceList {
 
 class SkillsList {
   String field;
-  String level;
+  var level;
 
   SkillsList({this.field, this.level});
 
@@ -344,7 +343,7 @@ class _LoginPageState extends State<LoginPage> {
       for (int i = 0; i < finalskill.length; i++) {
         print("hello");
         skillexpandlist
-            .add(SkillContainer(finalskill[i].field, finalskill[i].level));
+            .add(SkillContainer(finalskill[i].field, finalskill[i].level.toString()));
       }
       for (int i = 0; i < finaledu.length; i++) {
         if (finaledu[i].status.toLowerCase() == "completed") {
@@ -883,8 +882,9 @@ print("see here");
         }
       }
   }
-  
-          Navigator.of(context).push(
+    await gethttp(det);
+
+    Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
                 return Testing("");

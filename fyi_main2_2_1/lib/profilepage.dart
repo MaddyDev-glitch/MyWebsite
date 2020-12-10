@@ -177,84 +177,6 @@ class AchieveTag {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Future<void> gethttp() async {
-  //   var dio = Dio();
-  //   try {
-  //     response = await dio.get(
-  //       "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/behaal_baalak",
-  //       queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
-  //     );
-  //     print("GETHHTTP fucntion print -> $response");
-  //     var body = response.data;
-  //     // final ids = json.decode(response.data);
-  //     print(body);
-  //     educationJson = body['education'];
-  //     skillsJson = body['skills'];
-  //     projectsJson = body['projects'];
-  //     achievementsJson = body['achievements'];
-  //     experienceJson = body['experience'];
-  //     about = body['about'];
-  //     dob = body['dob'];
-  //     phone = body['phone'];
-  //     name = body['name'];
-  //     image = body['image'];
-  //     email = body['email'];
-  //     var tempexperience = experienceJson;
-  //     var tempskill=skillsJson;
-  //     var tempedu=educationJson;
-  //     finalexp = tempexperience
-  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-  //         .toList();
-  //     finaledu = tempedu
-  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-  //         .toList();
-  //     finalskill = tempskill
-  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-  //         .toList();
-  //
-  //     var tempDir = await getTemporaryDirectory();
-  //     File file = new File(tempDir.path + "/" + fileName);
-  //     file.writeAsString(response.toString(),
-  //         flush: true, mode: FileMode.write);
-  //   } catch (e) {
-  //     print(e);
-  //     print("ERROR");
-  //   }
-  // }
-  //
-  // Future<void> getcache() async {
-  //   var cacheDir = await getTemporaryDirectory();
-  //   print("getcache");
-  //   if (await File(cacheDir.path + "/" + fileName).exists()) {
-  //     print("Loading from cache");
-  //     var cachedata = File(cacheDir.path + "/" + fileName).readAsStringSync();
-  //     var cachedata1 = json.decode(cachedata);
-  //     print(cachedata1);
-  //     var body = cachedata1;
-  //     // final ids = json.decode(response.data);
-  //     educationJson = body['education'];
-  //     about = body['about'];
-  //     skillsJson = body['skills'];
-  //     projectsJson = body['projects'];
-  //     dob = body['dob'];
-  //     phone = body['phone'];
-  //     name = body['name'];
-  //     achievementsJson = body['achievements'];
-  //     image = body['image'];
-  //     email = body['email'];
-  //     experienceJson = body['experience'];
-  //     print(experienceJson.toString());
-  //     var tempexperience = experienceJson;
-  //     finalexp = tempexperience
-  //         .map<ExperienceList>((json) => ExperienceList.fromJson(json))
-  //         .toList();
-  //     print(finalexp[0].organization);
-  //   }
-  //   //TODO: If the Json file does not exist, then make the API Call
-  //   else {
-  //     gethttp();
-  //   }
-  // }
 
   @override
   void initState() {
@@ -394,7 +316,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Widget widget = projectexpandlist.elementAt(index);
                           return widget;
                         })
-                    // functioneducation(),
                   ])), // body
           Icon(
             Icons.post_add,
@@ -402,15 +323,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ) // iconPic
           ),
     ];
-
-    // Map mapedu = {
-    //   "degree": finaledu[0].degree,
-    //   "description": finaledu[0].description,
-    //   "from": finaledu[0].from,
-    //   "to": finaledu[0].to,
-    //   "status": finaledu[0].status,
-    //   "institute": finaledu[0].institute,
-    // };
   }
 
   Widget _profileText() {
@@ -444,9 +356,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             image: NetworkImage(widget.kimage),
           ),
         ),
-        // child: FadeInImage(
-        //     image: NetworkImage(""),
-        //     placeholder: AssetImage("images/noimage.jpeg")),
       ),
     );
   }
@@ -521,7 +430,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       List<SkillsTag> skitags = [];
       List<ProjectsTag> protags = [];
       List<AchieveTag> achtags = [];
-
       for(int i=0;i<finaledu.length;i++)
         {
           edutags.add(EduTag(finaledu[i].degree, finaledu[i].institute, finaledu[i].from, finaledu[i].to, finaledu[i].status, finaledu[i].description));
@@ -537,7 +445,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       for(int i=0;i<finalskill.length;i++)
       {
-        skitags.add(SkillsTag( finalskill[i].field,int.parse(finalskill[i].level)));
+        skitags.add(SkillsTag( finalskill[i].field,finalskill[i].level));
       }
       String jsonskilltemp = jsonEncode(skitags);
       var jsonskill=jsonDecode(jsonskilltemp);
@@ -555,12 +463,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
       String jsonachivetemp = jsonEncode(achtags);
       var jsonachive=jsonDecode(jsonachivetemp);
-
-      // List<dynamic> arrays_education = [];
-      // List<dynamic> arrays_experience = [];
-      // List<dynamic> arrays_skills = [];
-      // List<dynamic> arrays_achievement = [];
-      // List<dynamic> arrays_project = [];
 
       DateTime selectedDate = DateTime.now();
       _selectDate(BuildContext context) async {
@@ -588,6 +490,466 @@ class _ProfileScreenState extends State<ProfileScreen> {
       emailController.text = widget.kemail;
       dobController.text = widget.kdob;
 
+
+//TODO:Replicate the same to other attributes
+      void _EducationEnter() {
+        TextEditingController degree= TextEditingController();
+        TextEditingController institute= TextEditingController();
+        TextEditingController from= TextEditingController();
+        TextEditingController to= TextEditingController();
+        TextEditingController status= TextEditingController();
+        TextEditingController desc= TextEditingController();
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'degree',
+                          hintText: 'degree'
+                      ),
+                      controller: degree,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'institute',
+                          hintText: 'institute'
+                      ),
+                      controller: institute,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'from',
+                          hintText: 'from'
+                      ),
+                      controller: from,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'to',
+                          hintText: 'to'
+                      ),
+                      controller: to,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'status',
+                          hintText: 'status'
+                      ),
+                      controller: status,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'description',
+                          hintText: 'description'
+                      ),
+                      controller: desc,
+
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      edutags.add(EduTag(degree.text, institute.text, from.text, to.text, status.text, desc.text));
+                       jsonEdutemp = json.encode(edutags);
+                       jsonEdu=jsonDecode(jsonEdutemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      void _ExperienceEnter() {
+        TextEditingController organisation= TextEditingController();
+        TextEditingController post= TextEditingController();
+        TextEditingController from= TextEditingController();
+        TextEditingController to= TextEditingController();
+        TextEditingController status= TextEditingController();
+        TextEditingController desc= TextEditingController();
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+  decoration: InputDecoration(
+      border: InputBorder.none,
+      labelText: 'Organisation',
+      hintText: 'Organisation'
+  ),
+  controller: organisation,
+
+),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'post',
+                          hintText: 'post'
+                      ),
+                      controller: post,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'from',
+                          hintText: 'from'
+                      ),
+                      controller: from,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'to',
+                          hintText: 'to'
+                      ),
+                      controller: to,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'status',
+                          hintText: 'status'
+                      ),
+                      controller: status,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'description',
+                          hintText: 'description'
+                      ),
+                      controller: desc,
+
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      exptags.add(ExpTag(organisation.text, post.text, from.text, to.text, status.text, desc.text));
+                      jsonExptemp = json.encode(exptags);
+                      jsonExp=jsonDecode(jsonExptemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      void _SkillEnter() {
+        TextEditingController field= TextEditingController();
+        TextEditingController level= TextEditingController();
+
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'field',
+                          hintText: 'field'
+                      ),
+                      controller: field,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'level',
+                          hintText: 'level'
+                      ),
+                      controller: level,
+
+                    ),
+
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      skitags.add(SkillsTag(field.text,int.parse(level.text)));
+                      jsonskilltemp = json.encode(skitags);
+                      jsonskill=jsonDecode(jsonskilltemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      void _ProjectEnter() {
+        TextEditingController link= TextEditingController();
+        TextEditingController name= TextEditingController();
+        TextEditingController from= TextEditingController();
+        TextEditingController to= TextEditingController();
+        TextEditingController status= TextEditingController();
+        TextEditingController desc= TextEditingController();
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'name',
+                          hintText: 'name'
+                      ),
+                      controller: name,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'link',
+                          hintText: 'link'
+                      ),
+                      controller: link,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'from',
+                          hintText: 'from'
+                      ),
+                      controller: from,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'to',
+                          hintText: 'to'
+                      ),
+                      controller: to,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'status',
+                          hintText: 'status'
+                      ),
+                      controller: status,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'description',
+                          hintText: 'description'
+                      ),
+                      controller: desc,
+
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      protags.add(ProjectsTag( desc.text, status.text, from.text, to.text, link.text,name.text));
+                      jsonprojecttemp = json.encode(protags);
+                      jsonproject=jsonDecode(jsonprojecttemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      void _AchievementEnter() {
+        TextEditingController desc= TextEditingController();
+        TextEditingController title= TextEditingController();
+        TextEditingController year= TextEditingController();
+        TextEditingController issuer= TextEditingController();
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'title',
+                          hintText: 'title'
+                      ),
+                      controller: title,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'year',
+                          hintText: 'year'
+                      ),
+                      controller: year,
+
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'issuer',
+                          hintText: 'issuer'
+                      ),
+                      controller: issuer,
+
+                    ),
+
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'description',
+                          hintText: 'description'
+                      ),
+                      controller: desc,
+
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: () {
+
+                    setState(() {
+                      achtags.add(AchieveTag( desc.text, title.text, year.text, issuer.text));
+                      jsonachivetemp = json.encode(achtags);
+                      jsonachive=jsonDecode(jsonachivetemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
       void updateprofile() async {
         var dio = Dio();
         dio.options.headers['content-Type'] = 'application/json';
@@ -680,6 +1042,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text("Education",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+_EducationEnter();
+                      },
+                    ),
                     Container(
                       height: eduHeight,
                       child: ListView.builder(
@@ -726,6 +1098,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text("Experience",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+                        _ExperienceEnter();
+
+                      },
+                    ),
                     Container(
                       height: eduHeight,
                       child: ListView.builder(
@@ -772,6 +1155,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text("Achievements",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+                        _AchievementEnter();
+                      },
+                    ),
                     Container(
                       height: achHeight,
                       child: ListView.builder(
@@ -818,6 +1211,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text("Skills",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+                        _SkillEnter();
+                      },
+                    ),
                     Container(
                       height: skiHeight,
                       child: ListView.builder(
@@ -862,6 +1265,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text("Projects",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    FlatButton(
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                      onPressed: (){
+                        _ProjectEnter();
+                      },
+                    ),
                     Container(
                       height: proHeight,
                       child: ListView.builder(
