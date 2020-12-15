@@ -571,7 +571,7 @@ print("see here");
                 Container(
                   padding: EdgeInsets.only(right: 60),
                   height: 10,
-                  width: (MediaQuery.of(context).size.width / 1.5) *
+                  width: (MediaQuery.of(context).size.width / 1.8) *
                       (int.parse(level) / 100),
                   decoration: BoxDecoration(
                       color: Colors.blue,

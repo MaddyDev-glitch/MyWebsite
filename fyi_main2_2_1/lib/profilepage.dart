@@ -6,6 +6,7 @@ import 'package:fyi_main2_2_1/ArticleDetails.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'login_page.dart' as login;
+import 'login_page.dart';
 import 'package:dio/dio.dart';
 
 var imagepadtop = 50.0;
@@ -24,7 +25,7 @@ List<Expanditem> items;
 Response response;
 // String token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiN0ozTGlhOElrb05wNTFRY2t4UUlQZWN4WmJIMyJ9LCJpYXQiOjE2MDY5MzQ5NDJ9.Kmk_vx_OClEYGNj6uf7gcyqAm-4f-oORCS6_dRjcC8E";
 // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiN0ozTGlhOElrb05wNTFRY2t4UUlQZWN4WmJIMyJ9LCJpYXQiOjE2MDY5MzU2NDd9.nKv_fGu0sIQZJ_wpCf1NwNlcwob4F_XBoCH6JsAek3A"
-String token=login.token;
+String token = login.token;
 double contheight = 300;
 var educationJson;
 var about;
@@ -37,11 +38,11 @@ var achievementsJson;
 var image;
 var email;
 var experienceJson;
-double eduHeight=200;
-double expHeight=200;
-double skiHeight=200;
-double achHeight=200;
-double proHeight=200;
+double eduHeight = 200;
+double expHeight = 200;
+double skiHeight = 200;
+double achHeight = 200;
+double proHeight = 200;
 
 class Expanditem {
   bool isExpanded;
@@ -89,6 +90,7 @@ class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
+
 class EduTag {
   String degree;
   String institute;
@@ -97,17 +99,19 @@ class EduTag {
   String status;
   String desc;
 
-  EduTag(this.degree, this.institute,this.from,this.to,this.status,this.desc);
+  EduTag(
+      this.degree, this.institute, this.from, this.to, this.status, this.desc);
 
   Map toJson() => {
-    "degree": degree,
-    "description": desc,
-    "from": from,
-    "to": to,
-    "status": status,
-    "institute": institute,
-  };
+        "degree": degree,
+        "description": desc,
+        "from": from,
+        "to": to,
+        "status": status,
+        "institute": institute,
+      };
 }
+
 class ExpTag {
   String organization;
   String post;
@@ -116,29 +120,31 @@ class ExpTag {
   String status;
   String desc;
 
-  ExpTag(this.organization, this.post,this.from,this.to,this.status,this.desc);
+  ExpTag(
+      this.organization, this.post, this.from, this.to, this.status, this.desc);
 
   Map toJson() => {
-    "organization": organization,
-    "description": desc,
-    "from": from,
-    "to": to,
-    "status": status,
-    "post": post,
-  };
+        "organization": organization,
+        "description": desc,
+        "from": from,
+        "to": to,
+        "status": status,
+        "post": post,
+      };
 }
+
 class SkillsTag {
   String field;
   int value;
 
-
   SkillsTag(this.field, this.value);
 
   Map toJson() => {
-    "field": field,
-    "level":value,
-  };
+        "field": field,
+        "level": value,
+      };
 }
+
 class ProjectsTag {
   String status;
   String to;
@@ -147,37 +153,35 @@ class ProjectsTag {
   String desc;
   String name;
 
-
-  ProjectsTag(this.desc, this.status,this.from,this.to,this.link,this.name);
+  ProjectsTag(this.desc, this.status, this.from, this.to, this.link, this.name);
 
   Map toJson() => {
-    "description": desc,
-    "status":status,
-    "from": from,
-    "to":to,
-    "link": link,
-    "name":name,
-  };
+        "description": desc,
+        "status": status,
+        "from": from,
+        "to": to,
+        "link": link,
+        "name": name,
+      };
 }
+
 class AchieveTag {
   String issuer;
   String year;
   String desc;
   String title;
 
-
-  AchieveTag(this.desc, this.title,this.year,this.issuer);
+  AchieveTag(this.desc, this.title, this.year, this.issuer);
 
   Map toJson() => {
-    "description": desc,
-    "title":title,
-    "year": year,
-    "issuer":issuer,
+        "description": desc,
+        "title": title,
+        "year": year,
+        "issuer": issuer,
       };
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
   void initState() {
     print("TOKEN: ${login.token}");
@@ -190,8 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     finaledu = widget.kedulist;
     finalskill = widget.kskilllist;
     finalexp = widget.kexplist;
-    finalachieve=widget.kachlist;
-    finalproject=widget.kprolist;
+    finalachieve = widget.kachlist;
+    finalproject = widget.kprolist;
     experienceexpandlist = widget.experiencewidget;
     skillexpandlist = widget.skillwidget;
     educationexpandlist = widget.educationwidget;
@@ -329,10 +333,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Text(
-        'Profile',
+        about,
         style: TextStyle(
-          fontSize: 35.0,
-          letterSpacing: 1.5,
+          fontSize: 18.0,
+          letterSpacing: 1.0,
           color: Colors.black87,
           fontWeight: FontWeight.w300,
         ),
@@ -430,39 +434,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
       List<SkillsTag> skitags = [];
       List<ProjectsTag> protags = [];
       List<AchieveTag> achtags = [];
-      for(int i=0;i<finaledu.length;i++)
-        {
-          edutags.add(EduTag(finaledu[i].degree, finaledu[i].institute, finaledu[i].from, finaledu[i].to, finaledu[i].status, finaledu[i].description));
-        }
+      for (int i = 0; i < finaledu.length; i++) {
+        edutags.add(EduTag(
+            finaledu[i].degree,
+            finaledu[i].institute,
+            finaledu[i].from,
+            finaledu[i].to,
+            finaledu[i].status,
+            finaledu[i].description));
+      }
       var jsonEdutemp = json.encode(edutags);
-      var jsonEdu=jsonDecode(jsonEdutemp);
-      for(int i=0;i<finalexp.length;i++)
-      {
-        exptags.add(ExpTag( finalexp[i].organization,finalexp[i].post, finalexp[i].from, finalexp[i].to, finalexp[i].status, finalexp[i].description));
+      var jsonEdu = jsonDecode(jsonEdutemp);
+      for (int i = 0; i < finalexp.length; i++) {
+        exptags.add(ExpTag(
+            finalexp[i].organization,
+            finalexp[i].post,
+            finalexp[i].from,
+            finalexp[i].to,
+            finalexp[i].status,
+            finalexp[i].description));
       }
       String jsonExptemp = jsonEncode(exptags);
-      var jsonExp=jsonDecode(jsonExptemp);
+      var jsonExp = jsonDecode(jsonExptemp);
 
-      for(int i=0;i<finalskill.length;i++)
-      {
-        skitags.add(SkillsTag( finalskill[i].field,finalskill[i].level));
+      for (int i = 0; i < finalskill.length; i++) {
+        skitags.add(SkillsTag(finalskill[i].field, finalskill[i].level));
       }
       String jsonskilltemp = jsonEncode(skitags);
-      var jsonskill=jsonDecode(jsonskilltemp);
+      var jsonskill = jsonDecode(jsonskilltemp);
 
-      for(int i=0;i<finalproject.length;i++)
-      {
-        protags.add(ProjectsTag(finalproject[i].description, finalproject[i].status,finalproject[i].from,finalproject[i].to,finalproject[i].link,finalproject[i].name));
+      for (int i = 0; i < finalproject.length; i++) {
+        protags.add(ProjectsTag(
+            finalproject[i].description,
+            finalproject[i].status,
+            finalproject[i].from,
+            finalproject[i].to,
+            finalproject[i].link,
+            finalproject[i].name));
       }
       String jsonprojecttemp = jsonEncode(protags);
-      var jsonproject=jsonDecode(jsonprojecttemp);
+      var jsonproject = jsonDecode(jsonprojecttemp);
 
-      for(int i=0;i<finalachieve.length;i++)
-      {
-        achtags.add(AchieveTag(finalachieve[i].description,finalachieve[i].title,finalachieve[i].year,finalachieve[i].issuer));
+      for (int i = 0; i < finalachieve.length; i++) {
+        achtags.add(AchieveTag(
+            finalachieve[i].description,
+            finalachieve[i].title,
+            finalachieve[i].year,
+            finalachieve[i].issuer));
       }
       String jsonachivetemp = jsonEncode(achtags);
-      var jsonachive=jsonDecode(jsonachivetemp);
+      var jsonachive = jsonDecode(jsonachivetemp);
 
       DateTime selectedDate = DateTime.now();
       _selectDate(BuildContext context) async {
@@ -491,14 +512,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       dobController.text = widget.kdob;
 
 
+      void _UpdateAlert() {
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Update Profile'),
+              content: new SingleChildScrollView(
+                child: Text('The App will restart to update information',style: TextStyle(color: Colors.blue.shade800,fontSize:23))));
+          },
+        );
+
+    }
 //TODO:Replicate the same to other attributes
       void _EducationEnter() {
-        TextEditingController degree= TextEditingController();
-        TextEditingController institute= TextEditingController();
-        TextEditingController from= TextEditingController();
-        TextEditingController to= TextEditingController();
-        TextEditingController status= TextEditingController();
-        TextEditingController desc= TextEditingController();
+        TextEditingController degree = TextEditingController();
+        TextEditingController institute = TextEditingController();
+        TextEditingController from = TextEditingController();
+        TextEditingController to = TextEditingController();
+        TextEditingController status = TextEditingController();
+        TextEditingController desc = TextEditingController();
 
         showDialog(
           context: context, barrierDismissible: false, // user must tap button!
@@ -512,158 +545,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'degree',
-                          hintText: 'degree'
-                      ),
+                          hintText: 'degree'),
                       controller: degree,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'institute',
-                          hintText: 'institute'
-                      ),
+                          hintText: 'institute'),
                       controller: institute,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'from',
-                          hintText: 'from'
-                      ),
+                          hintText: 'from'),
                       controller: from,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'to',
-                          hintText: 'to'
-                      ),
+                          hintText: 'to'),
                       controller: to,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'status',
-                          hintText: 'status'
-                      ),
+                          hintText: 'status'),
                       controller: status,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'description',
-                          hintText: 'description'
-                      ),
+                          hintText: 'description'),
                       controller: desc,
-
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                new FlatButton(
-                  child: new Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                new FlatButton(
-                  child: new Text(
-                    'Add',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                  onPressed: () {
-
-                    setState(() {
-                      edutags.add(EduTag(degree.text, institute.text, from.text, to.text, status.text, desc.text));
-                       jsonEdutemp = json.encode(edutags);
-                       jsonEdu=jsonDecode(jsonEdutemp);
-                      Navigator.of(context).pop();
-                    });
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-      void _ExperienceEnter() {
-        TextEditingController organisation= TextEditingController();
-        TextEditingController post= TextEditingController();
-        TextEditingController from= TextEditingController();
-        TextEditingController to= TextEditingController();
-        TextEditingController status= TextEditingController();
-        TextEditingController desc= TextEditingController();
-
-        showDialog(
-          context: context, barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return new AlertDialog(
-              title: new Text('Enter your education details'),
-              content: new SingleChildScrollView(
-                child: new ListBody(
-                  children: [
-                    TextField(
-  decoration: InputDecoration(
-      border: InputBorder.none,
-      labelText: 'Organisation',
-      hintText: 'Organisation'
-  ),
-  controller: organisation,
-
-),
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'post',
-                          hintText: 'post'
-                      ),
-                      controller: post,
-
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'from',
-                          hintText: 'from'
-                      ),
-                      controller: from,
-
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'to',
-                          hintText: 'to'
-                      ),
-                      controller: to,
-
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'status',
-                          hintText: 'status'
-                      ),
-                      controller: status,
-
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'description',
-                          hintText: 'description'
-                      ),
-                      controller: desc,
-
                     ),
                   ],
                 ),
@@ -684,11 +602,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   onPressed: () {
-
                     setState(() {
-                      exptags.add(ExpTag(organisation.text, post.text, from.text, to.text, status.text, desc.text));
-                      jsonExptemp = json.encode(exptags);
-                      jsonExp=jsonDecode(jsonExptemp);
+                      edutags.add(EduTag(degree.text, institute.text, from.text,
+                          to.text, status.text, desc.text));
+                      jsonEdutemp = json.encode(edutags);
+                      jsonEdu = jsonDecode(jsonEdutemp);
                       Navigator.of(context).pop();
                     });
                   },
@@ -698,10 +616,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         );
       }
-      void _SkillEnter() {
-        TextEditingController field= TextEditingController();
-        TextEditingController level= TextEditingController();
 
+      void _ExperienceEnter() {
+        TextEditingController organisation = TextEditingController();
+        TextEditingController post = TextEditingController();
+        TextEditingController from = TextEditingController();
+        TextEditingController to = TextEditingController();
+        TextEditingController status = TextEditingController();
+        TextEditingController desc = TextEditingController();
+
+        showDialog(
+          context: context, barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return new AlertDialog(
+              title: new Text('Enter your education details'),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Organisation',
+                          hintText: 'Organisation'),
+                      controller: organisation,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'post',
+                          hintText: 'post'),
+                      controller: post,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'from',
+                          hintText: 'from'),
+                      controller: from,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'to',
+                          hintText: 'to'),
+                      controller: to,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'status',
+                          hintText: 'status'),
+                      controller: status,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'description',
+                          hintText: 'description'),
+                      controller: desc,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                new FlatButton(
+                  child: new Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      exptags.add(ExpTag(organisation.text, post.text,
+                          from.text, to.text, status.text, desc.text));
+                      jsonExptemp = json.encode(exptags);
+                      jsonExp = jsonDecode(jsonExptemp);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+
+      void _SkillEnter() {
+        TextEditingController field = TextEditingController();
+        TextEditingController level = TextEditingController();
 
         showDialog(
           context: context, barrierDismissible: false, // user must tap button!
@@ -715,21 +725,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'field',
-                          hintText: 'field'
-                      ),
+                          hintText: 'field'),
                       controller: field,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'level',
-                          hintText: 'level'
-                      ),
+                          hintText: 'level'),
                       controller: level,
-
                     ),
-
                   ],
                 ),
               ),
@@ -749,11 +754,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   onPressed: () {
-
                     setState(() {
-                      skitags.add(SkillsTag(field.text,int.parse(level.text)));
+                      skitags.add(SkillsTag(field.text, int.parse(level.text)));
                       jsonskilltemp = json.encode(skitags);
-                      jsonskill=jsonDecode(jsonskilltemp);
+                      jsonskill = jsonDecode(jsonskilltemp);
                       Navigator.of(context).pop();
                     });
                   },
@@ -763,13 +767,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         );
       }
+
       void _ProjectEnter() {
-        TextEditingController link= TextEditingController();
-        TextEditingController name= TextEditingController();
-        TextEditingController from= TextEditingController();
-        TextEditingController to= TextEditingController();
-        TextEditingController status= TextEditingController();
-        TextEditingController desc= TextEditingController();
+        TextEditingController link = TextEditingController();
+        TextEditingController name = TextEditingController();
+        TextEditingController from = TextEditingController();
+        TextEditingController to = TextEditingController();
+        TextEditingController status = TextEditingController();
+        TextEditingController desc = TextEditingController();
 
         showDialog(
           context: context, barrierDismissible: false, // user must tap button!
@@ -783,55 +788,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'name',
-                          hintText: 'name'
-                      ),
+                          hintText: 'name'),
                       controller: name,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'link',
-                          hintText: 'link'
-                      ),
+                          hintText: 'link'),
                       controller: link,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'from',
-                          hintText: 'from'
-                      ),
+                          hintText: 'from'),
                       controller: from,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'to',
-                          hintText: 'to'
-                      ),
+                          hintText: 'to'),
                       controller: to,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'status',
-                          hintText: 'status'
-                      ),
+                          hintText: 'status'),
                       controller: status,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'description',
-                          hintText: 'description'
-                      ),
+                          hintText: 'description'),
                       controller: desc,
-
                     ),
                   ],
                 ),
@@ -852,11 +845,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   onPressed: () {
-
                     setState(() {
-                      protags.add(ProjectsTag( desc.text, status.text, from.text, to.text, link.text,name.text));
+                      protags.add(ProjectsTag(desc.text, status.text, from.text,
+                          to.text, link.text, name.text));
                       jsonprojecttemp = json.encode(protags);
-                      jsonproject=jsonDecode(jsonprojecttemp);
+                      jsonproject = jsonDecode(jsonprojecttemp);
                       Navigator.of(context).pop();
                     });
                   },
@@ -866,11 +859,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         );
       }
+
       void _AchievementEnter() {
-        TextEditingController desc= TextEditingController();
-        TextEditingController title= TextEditingController();
-        TextEditingController year= TextEditingController();
-        TextEditingController issuer= TextEditingController();
+        TextEditingController desc = TextEditingController();
+        TextEditingController title = TextEditingController();
+        TextEditingController year = TextEditingController();
+        TextEditingController issuer = TextEditingController();
 
         showDialog(
           context: context, barrierDismissible: false, // user must tap button!
@@ -884,38 +878,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'title',
-                          hintText: 'title'
-                      ),
+                          hintText: 'title'),
                       controller: title,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'year',
-                          hintText: 'year'
-                      ),
+                          hintText: 'year'),
                       controller: year,
-
                     ),
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'issuer',
-                          hintText: 'issuer'
-                      ),
+                          hintText: 'issuer'),
                       controller: issuer,
-
                     ),
-
                     TextField(
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: 'description',
-                          hintText: 'description'
-                      ),
+                          hintText: 'description'),
                       controller: desc,
-
                     ),
                   ],
                 ),
@@ -936,11 +921,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   onPressed: () {
-
                     setState(() {
-                      achtags.add(AchieveTag( desc.text, title.text, year.text, issuer.text));
+                      achtags.add(AchieveTag(
+                          desc.text, title.text, year.text, issuer.text));
                       jsonachivetemp = json.encode(achtags);
-                      jsonachive=jsonDecode(jsonachivetemp);
+                      jsonachive = jsonDecode(jsonachivetemp);
                       Navigator.of(context).pop();
                     });
                   },
@@ -950,6 +935,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         );
       }
+
       void updateprofile() async {
         var dio = Dio();
         dio.options.headers['content-Type'] = 'application/json';
@@ -962,7 +948,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "phone": phoneController.text,
           "dob": dobController.text,
           "education": jsonEdu,
-          "achievements":jsonachive ,
+          "achievements": jsonachive,
           "skills": jsonskill,
           "projects": jsonproject,
           "experience": jsonExp,
@@ -979,7 +965,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           print("SUPER TRY");
           Response response = await dio.put(
             "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile",
-          data:finaldata,
+            data: finaldata,
           );
           var result = response.data;
           print(result);
@@ -1029,35 +1015,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
+                    Text("Date of Birth",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     FlatButton(
                         onPressed: () {
                           setState(() {
                             _selectDate(context);
                           });
                         },
-                        child: Text("Date of Birth",
+                        child: Text("Click to view and change",
                             style: TextStyle(fontWeight: FontWeight.bold))),
                     SizedBox(
                       height: 10,
                     ),
-                    Text("Education",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.add,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                      onPressed: (){
-_EducationEnter();
-                      },
+                    Row(
+                      children: [
+                        Text("Education",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        FlatButton(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _EducationEnter();
+                          },
+                        ),
+                      ],
                     ),
                     Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.shade100),
                       height: eduHeight,
                       child: ListView.builder(
-                        // cacheExtent: 2000000,
-                        // addAutomaticKeepAlives: true,
-                        // addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
                           Widget widget = educationexpandlist.elementAt(index);
                           return KeepAlive(
@@ -1065,8 +1058,6 @@ _EducationEnter();
                             child: Dismissible(
                               key: ValueKey(educationexpandlist.length),
                               onDismissed: (direction) {
-
-                                // delete_count = delete_count + 1;
                                 setState(() {
                                   educationexpandlist.removeAt(index);
                                   edutags.removeAt(index);
@@ -1077,8 +1068,6 @@ _EducationEnter();
                                   }
                                 });
                               },
-                              // Show a red background as the item is swiped away.
-                              // background: Container(color: Colors.red),
                               background: Container(
                                 color: Colors.red.shade800,
                                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -1096,20 +1085,30 @@ _EducationEnter();
                         itemCount: educationexpandlist.length,
                       ),
                     ),
-                    Text("Experience",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.add,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                      onPressed: (){
-                        _ExperienceEnter();
-
-                      },
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text("Experience",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        FlatButton(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _ExperienceEnter();
+                          },
+                        ),
+                      ],
                     ),
                     Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.shade100),
                       height: eduHeight,
                       child: ListView.builder(
                         cacheExtent: 2000000,
@@ -1123,8 +1122,6 @@ _EducationEnter();
                               key: ValueKey(experienceexpandlist.length),
 
                               onDismissed: (direction) {
-
-
                                 // delete_count = delete_count + 1;
                                 setState(() {
                                   experienceexpandlist.removeAt(index);
@@ -1142,7 +1139,7 @@ _EducationEnter();
                                 alignment: AlignmentDirectional.centerStart,
                                 child: Icon(
                                   Icons.delete,
-                                  size: 50,
+                                  size: 40,
                                   color: Colors.white,
                                 ),
                               ),
@@ -1153,34 +1150,44 @@ _EducationEnter();
                         itemCount: experienceexpandlist.length,
                       ),
                     ),
-                    Text("Achievements",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.add,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                      onPressed: (){
-                        _AchievementEnter();
-                      },
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text("Achievements",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        FlatButton(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _AchievementEnter();
+                          },
+                        ),
+                      ],
                     ),
                     Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.shade100),
                       height: achHeight,
                       child: ListView.builder(
                         cacheExtent: 2000000,
                         addAutomaticKeepAlives: true,
                         addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
-                          Widget widget = achievementexpandlist.elementAt(index);
+                          Widget widget =
+                              achievementexpandlist.elementAt(index);
                           return KeepAlive(
                             keepAlive: true,
                             child: Dismissible(
                               key: ValueKey(achievementexpandlist.length),
 
                               onDismissed: (direction) {
-
-
                                 // delete_count = delete_count + 1;
                                 setState(() {
                                   achievementexpandlist.removeAt(index);
@@ -1209,19 +1216,30 @@ _EducationEnter();
                         itemCount: achievementexpandlist.length,
                       ),
                     ),
-                    Text("Skills",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.add,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                      onPressed: (){
-                        _SkillEnter();
-                      },
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text("Skills",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        FlatButton(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _SkillEnter();
+                          },
+                        ),
+                      ],
                     ),
                     Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.shade100),
                       height: skiHeight,
                       child: ListView.builder(
                         cacheExtent: 2000000,
@@ -1235,7 +1253,6 @@ _EducationEnter();
                               key: ValueKey(skillexpandlist.length),
 
                               onDismissed: (direction) {
-                                // delete_count = delete_count + 1;
                                 setState(() {
                                   skillexpandlist.removeAt(index);
                                   skitags.removeAt(index);
@@ -1263,19 +1280,30 @@ _EducationEnter();
                         itemCount: skillexpandlist.length,
                       ),
                     ),
-                    Text("Projects",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    FlatButton(
-                      child: Icon(
-                        Icons.add,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                      onPressed: (){
-                        _ProjectEnter();
-                      },
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text("Projects",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        FlatButton(
+                          child: Icon(
+                            Icons.add,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            _ProjectEnter();
+                          },
+                        ),
+                      ],
                     ),
                     Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.shade100),
                       height: proHeight,
                       child: ListView.builder(
                         cacheExtent: 2000000,
@@ -1289,8 +1317,6 @@ _EducationEnter();
                               key: ValueKey(projectexpandlist.length),
 
                               onDismissed: (direction) {
-
-
                                 // delete_count = delete_count + 1;
                                 setState(() {
                                   projectexpandlist.removeAt(index);
@@ -1338,10 +1364,14 @@ _EducationEnter();
                       fontWeight: FontWeight.w700,
                       color: Colors.blue.shade700),
                 ),
-                onPressed: () async{
+                onPressed: () async {
                   await updateprofile();
+                 await _UpdateAlert();
                   setState(() {
-                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
                   });
                 },
               ),
@@ -1364,17 +1394,51 @@ _EducationEnter();
                     child: Container(),
                     painter: HeaderCurvedContainer(),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FlatButton(
+                          onPressed: () {
+                            setState(() {
+                              _editprofile();
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "EDIT",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
                   _circleAvatar(),
                 ],
               ),
               _profileText(),
-              FlatButton(
-                  onPressed: () {
-                    setState(() {
-                      _editprofile();
-                    });
-                  },
-                  child: Text("EDIT")),
+              // FlatButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         _editprofile();
+              //       });
+              //     },
+              //     child: Row(
+              //       children: [
+              //         Icon(
+              //           Icons.edit,
+              //           color: Colors.black,
+              //         ),
+              //         Text("EDIT"),
+              //       ],
+              //     )),
               // _circleAvatar(),
               _textFormFieldCalling(),
             ],
