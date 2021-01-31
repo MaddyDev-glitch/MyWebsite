@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:prompt_dialog/prompt_dialog.dart';
 var username;
-
+int super_signin=0; //0=google 1=facebook
 String fileName = "CacheData.json";
 Response response;
 String token =
@@ -207,6 +207,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
           data:body,
         );
         print('signInWithGoogle succeeded: $res');
+        super_signin=0;
         det = user.displayName;
         token=res.data['token'];
         print("TOKEN BS: $token");
@@ -295,13 +296,27 @@ class _LoginPageState extends State<LoginPage> {
       var body = response.data;
       // final ids = json.decode(response.data);
       print(body);
+      print("see here");
+      about = body['about'];
+      print(about);
       educationJson = body['education'];
+      print("see here");
+
       skillsJson = body['skills'];
+      print("see here");
+
       projectsJson = body['projects'];
+      print("see here");
+
       achievementsJson = body['achievements'];
       experienceJson = body['experience'];
-      about = body['about'];
+      print("see here");
+
+
+      print("see here");
+
       dob = body['dob'];
+      print("see here");
       phone = body['phone'];
       name = body['name'];
       image = body['picture'];
@@ -311,6 +326,8 @@ class _LoginPageState extends State<LoginPage> {
       var tempedu = educationJson;
       var tempach = achievementsJson;
       var temppro = projectsJson;
+      print("see here");
+
       print(projectsJson);
       finalexp = tempexperience
           .map<ExperienceList>((json) => ExperienceList.fromJson(json))
@@ -799,6 +816,7 @@ print("see here");
           "picture": currentUser1['photoURL'],
           "phone": phoneNumber,
         };
+        print("body");
         print(body);
         name=username;    //login.name
         phone=phoneNumber;
@@ -808,6 +826,7 @@ print("see here");
           "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
           data:body,
         );
+        print("res");
         print(res);
         
         print('signInWithFacebook succeeded: $res');
@@ -832,20 +851,20 @@ print("see here");
         username=value;
         name=value;    //login.name
         phoneNumber = user.phoneNumber;
-        phone=user.phoneNumber;
         email=currentUser1['email'];
         image=currentUser1['photoURL'];
-        print(phoneNumber);
         if (currentUser1['phoneNumber']=='' || currentUser1['phoneNumber']==null) {
           phoneNumber = await prompt(context,title:Text("Enter your Mobile Number"));
           var phone = "+91" + phoneNumber;
+          // phone=user.phoneNumber;
           print(phone);
+          print(phoneNumber);
           await _auth.verifyPhoneNumber(phoneNumber: phone,
            verificationCompleted:(cred){
              },
              verificationFailed: (e){
                print(e.toString());
-               print("error");
+               print("error phone");
               },
               codeSent: (String verificationId, int resendToken) async {
                 String smsCode = await prompt(context,title:Text("Enter the OTP sent to your phone Number"));
@@ -861,15 +880,18 @@ print("see here");
                 "picture": currentUser1['photoURL'],
                 "phone": phoneNumber,
               };
+                print("body");
               print(body);
 
               res = await dio.post(
                 "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/userLogin",
                 data:body,
               );
+              print("res");
               print(res);
               
                 print('signInWithFacebook succeeded: $res');
+                super_signin=1;
                 det = user.displayName;
                 name=value;    //login.name
                 phone=user.phoneNumber;

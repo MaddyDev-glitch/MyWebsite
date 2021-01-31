@@ -800,9 +800,7 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                   //   key: Key(index.toString()),
                                   //   child: widget,
                                   // );
-                                  return KeepAlive(
-                                    keepAlive: true,
-                                    child: Dismissible(
+                                  return  Dismissible(
                                       key: ValueKey(list.length),
 
                                       onDismissed: (direction) {
@@ -826,8 +824,8 @@ class _MyCustomFormState extends State<MyCustomForm> {
                                     color: Colors.white,
                                     ),),
                                       child: ListTile(title: widget),
-                                    ),
-                                  );
+                                    );
+
                                 },
                                 itemCount: list.length,
                               )),

@@ -172,7 +172,7 @@ class _ArticleRowState extends State<ArticleRow> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    if (index >= list.length - 4) {
+                    if (index >= list.length - 4 && list.length-4 >0) {
                       supercount = supercount + 1;
                       gethttp(supercount);
                       // setState(() {

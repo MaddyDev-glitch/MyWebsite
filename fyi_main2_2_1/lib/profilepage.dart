@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fyi_main2_2_1/ArticleDetails.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'login_page.dart' as login;
-import 'login_page.dart';
-import 'package:dio/dio.dart';
+import 'package:fyi_main2_2_1/demo.dart';
+import 'package:fyi_main2_2_1/profile_loader.dart';
 
+import 'login_page.dart' as login;
+import 'package:dio/dio.dart';
+var det=login.det;
 var imagepadtop = 50.0;
+var formattedDate;
 String fileName = "CacheData.json";
 List<login.ExperienceList> finalexp;
 List<login.EducationList> finaledu;
@@ -496,6 +496,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (picked != null && picked != selectedDate)
           setState(() {
             selectedDate = picked;
+            print("SELECTED DATE= $selectedDate");
+            var date = DateTime.parse("$selectedDate");
+            formattedDate = "${date.year}-${date.month}-${date.day}";
+
+            print (formattedDate);
           });
       }
 
@@ -511,20 +516,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       emailController.text = widget.kemail;
       dobController.text = widget.kdob;
 
-
       void _UpdateAlert() {
         showDialog(
           context: context, barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
             return new AlertDialog(
-              title: new Text('Update Profile'),
-              content: new SingleChildScrollView(
-                child: Text('The App will restart to update information',style: TextStyle(color: Colors.blue.shade800,fontSize:23))));
+                title: new Text('Update Profile'),
+                content: new SingleChildScrollView(
+                    child: Text('The App will restart to update information',
+                        style: TextStyle(
+                            color: Colors.blue.shade800, fontSize: 23))));
           },
         );
+      }
 
-    }
-//TODO:Replicate the same to other attributes
       void _EducationEnter() {
         TextEditingController degree = TextEditingController();
         TextEditingController institute = TextEditingController();
@@ -937,6 +942,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       void updateprofile() async {
+        print("HALOTAGS====${edutags.toString()}");
+        print("HALO====${jsonEdu.toString()}");
+        bool signin_method;
+        if (login.super_signin == 0) {
+          signin_method = true;
+        } else {
+          signin_method = false;
+        }
         var dio = Dio();
         dio.options.headers['content-Type'] = 'application/json';
         dio.options.headers["x-auth-token"] = "$token";
@@ -946,13 +959,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "picture": widget.kimage,
           "email": emailController.text,
           "phone": phoneController.text,
-          "dob": dobController.text,
+          "dob": formattedDate,
           "education": jsonEdu,
           "achievements": jsonachive,
           "skills": jsonskill,
           "projects": jsonproject,
           "experience": jsonExp,
-          "google": true,
+          "google": signin_method,
         };
         Map finaldata = {"profile": data};
         print("FINAL DATA");
@@ -1053,15 +1066,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ListView.builder(
                         itemBuilder: (context, index) {
                           Widget widget = educationexpandlist.elementAt(index);
-                          return KeepAlive(
-                            keepAlive: true,
-                            child: Dismissible(
+                          return Dismissible(
                               key: ValueKey(educationexpandlist.length),
                               onDismissed: (direction) {
                                 setState(() {
                                   educationexpandlist.removeAt(index);
                                   edutags.removeAt(index);
-                                  print(educationexpandlist.length);
+                                  jsonEdutemp = json.encode(edutags);
+                                  jsonEdu = jsonDecode(jsonEdutemp);
                                   if (educationexpandlist.length == 0) {
                                     eduHeight = 0;
                                     print("SET ZERO");
@@ -1079,8 +1091,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               child: ListTile(title: widget),
-                            ),
-                          );
+                            );
                         },
                         itemCount: educationexpandlist.length,
                       ),
@@ -1116,9 +1127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
                           Widget widget = experienceexpandlist.elementAt(index);
-                          return KeepAlive(
-                            keepAlive: true,
-                            child: Dismissible(
+                          return Dismissible(
                               key: ValueKey(experienceexpandlist.length),
 
                               onDismissed: (direction) {
@@ -1126,6 +1135,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   experienceexpandlist.removeAt(index);
                                   exptags.removeAt(index);
+                                  jsonExptemp = jsonEncode(exptags);
+                                  jsonExp = jsonDecode(jsonExptemp);
                                   if (experienceexpandlist.length == 0) {
                                     expHeight = 0;
                                   }
@@ -1144,8 +1155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               child: ListTile(title: widget),
-                            ),
-                          );
+                            );
                         },
                         itemCount: experienceexpandlist.length,
                       ),
@@ -1182,9 +1192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         itemBuilder: (context, index) {
                           Widget widget =
                               achievementexpandlist.elementAt(index);
-                          return KeepAlive(
-                            keepAlive: true,
-                            child: Dismissible(
+                          return  Dismissible(
                               key: ValueKey(achievementexpandlist.length),
 
                               onDismissed: (direction) {
@@ -1192,6 +1200,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   achievementexpandlist.removeAt(index);
                                   achtags.removeAt(index);
+                                  jsonachivetemp = jsonEncode(achtags);
+                                  jsonachive = jsonDecode(jsonachivetemp);
                                   if (achievementexpandlist.length == 0) {
                                     expHeight = 0;
                                   }
@@ -1210,8 +1220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               child: ListTile(title: widget),
-                            ),
-                          );
+                            );
                         },
                         itemCount: achievementexpandlist.length,
                       ),
@@ -1247,15 +1256,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
                           Widget widget = skillexpandlist.elementAt(index);
-                          return KeepAlive(
-                            keepAlive: true,
-                            child: Dismissible(
+                          return  Dismissible(
                               key: ValueKey(skillexpandlist.length),
 
                               onDismissed: (direction) {
                                 setState(() {
                                   skillexpandlist.removeAt(index);
                                   skitags.removeAt(index);
+                                   jsonskilltemp = jsonEncode(skitags);
+                                   jsonskill = jsonDecode(jsonskilltemp);
                                   if (skillexpandlist.length == 0) {
                                     expHeight = 0;
                                   }
@@ -1274,8 +1283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               child: ListTile(title: widget),
-                            ),
-                          );
+                            );
                         },
                         itemCount: skillexpandlist.length,
                       ),
@@ -1311,9 +1319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         addRepaintBoundaries: false,
                         itemBuilder: (context, index) {
                           Widget widget = projectexpandlist.elementAt(index);
-                          return KeepAlive(
-                            keepAlive: true,
-                            child: Dismissible(
+                          return  Dismissible(
                               key: ValueKey(projectexpandlist.length),
 
                               onDismissed: (direction) {
@@ -1321,6 +1327,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   projectexpandlist.removeAt(index);
                                   protags.removeAt(index);
+                                  jsonprojecttemp = jsonEncode(protags);
+                                  jsonproject = jsonDecode(jsonprojecttemp);
                                   if (projectexpandlist.length == 0) {
                                     expHeight = 0;
                                   }
@@ -1339,8 +1347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               child: ListTile(title: widget),
-                            ),
-                          );
+                            );
                         },
                         itemCount: projectexpandlist.length,
                       ),
@@ -1366,11 +1373,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () async {
                   await updateprofile();
-                 await _UpdateAlert();
+                  // await _UpdateAlert();
                   setState(() {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(builder: (context) => LoadingScreen()),  //change
                     );
                   });
                 },
@@ -1381,7 +1388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    return SafeArea(
+    return WillPopScope(child: SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -1395,8 +1402,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     painter: HeaderCurvedContainer(),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      FlatButton(
+                          onPressed: () {
+                            setState(() {
+                              Navigator.pop(context);
+
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_back_rounded,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "Back",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )),
                       FlatButton(
                           onPressed: () {
                             setState(() {
@@ -1445,7 +1474,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    ), onWillPop: ()async{    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Testing(det); //TODO:FB
+        },
+      ),
     );
+    return true;});
   }
 }
 
