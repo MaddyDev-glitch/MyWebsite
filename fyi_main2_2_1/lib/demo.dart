@@ -4,15 +4,97 @@ import 'package:fyi_main2_2_1/articlepage.dart';
 import 'package:fyi_main2_2_1/showarticle.dart';
 import 'profilepage.dart';
 import 'login_page.dart' as login;
+var educationJson;
+var about;
+var skillsJson;
+var projectsJson;
+var dob;
+var phone;
+var name;
+var achievementsJson;
+var image;
+var email;
+var experienceJson;
+List<login.ExperienceList> finalexp;
+List<login.EducationList> finaledu;
+List<login.SkillsList> finalskill;
+List<login.ProjectList> finalproject;
+List<login.AchievementList> finalachieve;
+List<Widget> experienceexpandlist = new List();
+List<Widget> skillexpandlist = new List();
+List<Widget> educationexpandlist = new List();
+List<Widget> projectexpandlist = new List();
+List<Widget> achievementexpandlist = new List();
+
 
 class Testing extends StatefulWidget {
   String username;
-  Testing(this.username);
+  String kname;
+  String kimage;
+  String kemail;
+  String kphone;
+  String kdob;
+  String kabout;
+  List<login.EducationList> kedulist;
+  List<login.SkillsList> kskilllist;
+  List<login.ExperienceList> kexplist;
+  List<login.AchievementList> kachlist;
+  List<login.ProjectList> kprolist;
+
+  List<Widget> experiencewidget;
+  List<Widget> skillwidget;
+  List<Widget> educationwidget;
+  List<Widget> achievementwidget;
+  List<Widget> projectwidget;
+  Testing(this.username,this.kabout,
+      this.kdob,
+      this.kedulist,
+      this.kemail,
+      this.kexplist,
+      this.kimage,
+      this.kname,
+      this.kphone,
+      this.kskilllist,
+      this.experiencewidget,
+      this.skillwidget,
+      this.educationwidget,
+      this.achievementwidget,
+      this.projectwidget,
+      this.kachlist,
+      this.kprolist);
   @override
   _TestingState createState() => _TestingState();
 }
 
 class _TestingState extends State<Testing> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    name = widget.kname;
+    phone = widget.kphone;
+    image = widget.kimage;
+    email = widget.kemail;
+    dob = widget.kdob;
+    about = widget.kabout;
+    finaledu = widget.kedulist;
+    finalskill = widget.kskilllist;
+    finalexp = widget.kexplist;
+    finalachieve = widget.kachlist;
+    finalproject = widget.kprolist;
+    experienceexpandlist = widget.experiencewidget;
+    skillexpandlist = widget.skillwidget;
+    educationexpandlist = widget.educationwidget;
+    achievementexpandlist = widget.achievementwidget;
+    projectexpandlist = widget.projectwidget;
+
+    print(projectexpandlist.length);
+    print(experienceexpandlist.length);
+    print(skillexpandlist.length);
+    // print(finalexp[0].organization);
+    // print(widget.kexplist[0].organization);
+    print(image);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -112,7 +194,7 @@ if(login.phone==null)
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfileScreen(login.about,login.dob,login.finaledu,login.email,login.finalexp,login.image,login.name,login.phone,login.finalskill,login.experienceexpandlist,login.skillexpandlist,login.educationexpandlist,login.achievementexpandlist,login.projectexpandlist,login.finalachievement,login.finalproject)),
+                      builder: (context) => ProfileScreen(about,dob,finaledu,email,finalexp,image,name,phone,finalskill,experienceexpandlist,skillexpandlist,educationexpandlist,achievementexpandlist,projectexpandlist,finalachieve,finalproject)),
                 );
               });
             },

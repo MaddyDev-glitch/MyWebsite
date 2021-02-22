@@ -1477,7 +1477,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ), onWillPop: ()async{    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return Testing(det); //TODO:FB
+          return Testing(username,about,dob,finaledu,email,finalexp,image,name,phone,finalskill,experienceexpandlist,skillexpandlist,educationexpandlist,achievementexpandlist,projectexpandlist,finalachievement,finalproject); //TODO:FB
         },
       ),
     );
