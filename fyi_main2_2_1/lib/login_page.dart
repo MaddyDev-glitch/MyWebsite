@@ -10,6 +10,20 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:prompt_dialog/prompt_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+CheckloggedInGoogle() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('intValue',1);
+}
+CheckloggedInFB() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('intValue',2);
+}
+Prefusername(String name) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('prefusername',name);
+}
 var username;
 int super_signin=0; //0=google 1=facebook
 String fileName = "CacheData.json";
@@ -207,6 +221,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
           data:body,
         );
         print('signInWithGoogle succeeded: $res');
+        CheckloggedInGoogle();
         super_signin=0;
         det = user.displayName;
         token=res.data['token'];
@@ -259,6 +274,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
                 data:body,
               );
                 print('signInWithGoogle succeeded: $res');
+                CheckloggedInGoogle();
                 det = user.displayName;
                 return '${user.displayName}';
              
@@ -288,8 +304,10 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> gethttp(String userloginname) async {
     var dio = Dio();
     try {
+      userloginname=username;
+      print("USERNAME101 $username");
       response = await dio.get(
-        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/$username",
+        "https://us-central1-fyi-vitc.cloudfunctions.net/api/profile/maddyFB",
         queryParameters: {"x-auth-token": token}, //?x-auth-token=$token
       );
       print("GETHHTTP fucntion print -> $response");
@@ -501,6 +519,7 @@ print("see here");
     }
     //TODO: If the Json file does not exist, then make the API Call
     else {
+      Prefusername(det);
       gethttp(det);
     }
   }
@@ -789,14 +808,12 @@ print("see here");
   print("bye");
   var res;
   var phoneNumber;
-  var username;
   if (user != null) {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
     var currentUser = _auth.currentUser;
     print(currentUser);
-    // await user.linkWithPhoneNumber("+911111111111");
     print(user);
     Map<String,dynamic> currentUser1={"uid":currentUser.uid,"xa":currentUser.refreshToken,"displayName":currentUser.displayName,"email":currentUser.email,"photoURL":currentUser.photoURL,"username":"","phoneNumber":""};
     assert(user.uid == currentUser1['uid']);
@@ -805,7 +822,8 @@ print("see here");
           "https://us-central1-fyi-vitc.cloudfunctions.net/api/auth/emailCheck",
           data:{ "email": currentUser1["email"] }
         );
-        print(emailCheck.data);
+        print(emailCheck.data['username']);
+        username=emailCheck.data['username'];
         username=emailCheck.data['username'];
         var body = {
           "facebook": true,
@@ -828,11 +846,15 @@ print("see here");
         );
         print("res");
         print(res);
-        
+
         print('signInWithFacebook succeeded: $res');
+        CheckloggedInFB();
         det = user.displayName;
+        username=det;
+        print("usernamy $username");
         token=res.data['token'];
-      } catch(err) {
+      }
+      catch(err) {
         print(err);
         var value = await prompt(context,title:Text("Enter a unique username"));
         while (true) {
@@ -889,10 +911,11 @@ print("see here");
               );
               print("res");
               print(res);
-              
+
                 print('signInWithFacebook succeeded: $res');
+                CheckloggedInFB();
                 super_signin=1;
-                det = user.displayName;
+                det =username;
                 name=value;    //login.name
                 phone=user.phoneNumber;
                 email=currentUser1['email'];
@@ -904,22 +927,24 @@ print("see here");
         }
       }
   }
-    await gethttp(det);
-
+    Prefusername(username);
+    await gethttp(username);
+    String phone_string = phone.toString();
     Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return Testing("");
+                return Testing(username,about,dob,finaledu,email,finalexp,image,name,phone_string,finalskill,experienceexpandlist,skillexpandlist,educationexpandlist,achievementexpandlist,projectexpandlist,finalachievement,finalproject);
               },
             ),
           );
         }
-    
+
   
 
   void onLoginStatusChanged(bool isLoggedIn) {
     setState(() {
       isLoggedIn = isLoggedIn;
+      CheckloggedInGoogle();
     });
   }
 
@@ -994,10 +1019,11 @@ print("see here");
         signInWithGoogle(context).then((result) async {
           if (result != null) {
             await gethttp(det);
+            Prefusername(det);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return Testing(det);
+                  return Testing(username,about,dob,finaledu,email,finalexp,image,name,phone,finalskill,experienceexpandlist,skillexpandlist,educationexpandlist,achievementexpandlist,projectexpandlist,finalachievement,finalproject);
                 },
               ),
             );

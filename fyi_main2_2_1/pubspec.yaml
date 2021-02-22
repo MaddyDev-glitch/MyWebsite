@@ -53,6 +53,8 @@ dev_dependencies:
   flutter_widget_from_html: ^0.5.1+4
   flutter_facebook_auth: "^1.0.0"
   flutter_spinkit: ^4.1.2+1
+  shared_preferences: ^0.5.12+4
+
 
 
   #  cloud_firestore: ^0.14.1+2
