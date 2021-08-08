@@ -192,7 +192,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 )),
             Padding(
-              padding: EdgeInsets.only(left:SizeConfig.screenWidth / 7,bottom: 100),
+              padding: EdgeInsets.only(
+                  left: SizeConfig.screenWidth / 7, bottom: 100),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: TextButton(
