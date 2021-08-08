@@ -44,11 +44,7 @@ class _page2State extends State<page2> {
               //   // width: SizeConfig.screenWidth,
               //   // child: new Image.asset("images/bg1.png"),
               // ),
-              Image.asset(
-                "images/bg1.png",
-                fit: BoxFit.fill,
-                width: SizeConfig.screenWidth,
-              ),
+              Image.asset("images/bg1.png",fit: BoxFit.fill,width: SizeConfig.screenWidth,),
               SingleChildScrollView(
                 child: Wrap(
                   children: [
@@ -56,23 +52,20 @@ class _page2State extends State<page2> {
                   ],
                 ),
               ),
+
             ],
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Text(
-              "Wait! There is more Scroll down",
-              style: GoogleFonts.lato(
-                fontWeight: FontWeight.w300,
-                color: Colors.black,
-                fontSize: 45,
-              ),
-            ),
+            child: Text("Wait! There is more Scroll down", style: GoogleFonts.lato(
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+              fontSize: 45,
+            ),),
           ),
-          SizedBox(
-            height: 50,
-          ),
+         SizedBox(height: 50,),
         ],
+
       ),
       backgroundColor: Colors.white,
     );
