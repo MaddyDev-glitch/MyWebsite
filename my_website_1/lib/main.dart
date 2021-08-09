@@ -51,7 +51,10 @@ class MyApp extends StatelessWidget {
           defaultScale: true,
           breakpoints: [
             ResponsiveBreakpoint.resize(450, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(500, name: TABLET),
+            ResponsiveBreakpoint.resize(500, name: MOBILE),
             ResponsiveBreakpoint.autoScale(800, name: TABLET),
+            ResponsiveBreakpoint.resize(800, name: MOBILE),
             ResponsiveBreakpoint.autoScale(1000, name: TABLET),
             ResponsiveBreakpoint.resize(1200, name: DESKTOP),
             ResponsiveBreakpoint.autoScale(2460, name: "4K"),
@@ -103,28 +106,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   indicatorBackgroundColor: Colors.grey,
                   isLoop: true,
                   children: [
-                    Image.asset(
-                      'images/b1.jpeg',
+                    Image.network(
+                      'https://i.ibb.co/CtHYLtf/b1.jpg',
                       fit: BoxFit.cover,
                     ),
-                    Image.asset(
-                      'images/b2.jpeg',
+                    Image.network(
+                      'https://i.ibb.co/4M2csXR/b2.jpg',
                       fit: BoxFit.cover,
                     ),
-                    Image.asset(
-                      'images/b3.jpeg',
+                    Image.network(
+                      'https://i.ibb.co/yRcfBxg/b3.jpg',
                       fit: BoxFit.cover,
                     ),
-                    Image.asset(
-                      'images/b4.jpeg',
+                    Image.network(
+                      'https://i.ibb.co/gyfgK3x/b4.jpg',
                       fit: BoxFit.cover,
                     ),
-                    Image.asset(
-                      'images/b5.jpeg',
+                    Image.network(
+                      'https://i.ibb.co/T0PmZCY/b5.jpg',
                       fit: BoxFit.cover,
                     ),
-                    Image.asset(
-                      'images/b6.png',
+                    Image.network(
+                      'https://i.ibb.co/Wg5yrdk/b6.png',
                       fit: BoxFit.cover,
                     ),
                   ],

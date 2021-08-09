@@ -35,17 +35,23 @@ class _page2State extends State<page2> {
         children: [
           Stack(
             children: <Widget>[
-              // Container(
-              //   decoration: const BoxDecoration(
-              //     image: DecorationImage(
-              //         alignment: Alignment.topCenter,
-              //         image: AssetImage("images/bg1.png"),
-              //         fit: BoxFit.fitWidth),
-              //   ),
-              //   // width: SizeConfig.screenWidth,
-              //   // child: new Image.asset("images/bg1.png"),
-              // ),
-              Image.asset("images/bg1.png",fit: BoxFit.fill,width: SizeConfig.screenWidth,),
+              Container(
+                child: Image.network(
+                  "https://i.ibb.co/r0wCwgb/bg1.png",
+                  fit: BoxFit.fill,
+                  width: SizeConfig.screenWidth,
+                ),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.8),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+              ),
               SingleChildScrollView(
                 child: Wrap(
                   children: [
@@ -53,20 +59,241 @@ class _page2State extends State<page2> {
                   ],
                 ),
               ),
-
             ],
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Text("Wait! There is more Scroll down", style: GoogleFonts.lato(
-              fontWeight: FontWeight.w300,
-              color: Colors.black,
-              fontSize: 45,
-            ),),
+            child: Text(
+              "Wait! There is more Scroll down",
+              style: GoogleFonts.lato(
+                fontWeight: FontWeight.w300,
+                color: Colors.black,
+                fontSize: 45,
+              ),
+            ),
           ),
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
+          Container(
+            child: Center(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(right: SizeConfig.screenWidth / 1.3,left: 50),
+                    child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Image.network("https://i.ibb.co/Fk17gS8/puzzle.png",
+                            color: Color.fromRGBO(255, 255, 255, 0.25),
+                            colorBlendMode: BlendMode.modulate),
+                   ),
+                  ),
+                  Padding(
+                    padding:  EdgeInsets.only(left: SizeConfig.screenWidth / 1.3,right: 50),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Image.network("https://i.ibb.co/JjcHn8H/code.png",
+                          color: Color.fromRGBO(255, 255, 255, 0.25),
+                          colorBlendMode: BlendMode.modulate),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.screenWidth / 4),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Part Hobbyist",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 35,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Cyclist",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Runner",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Photographer",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Hiker",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Swimming(sort of...)",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: SizeConfig.screenWidth / 4),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Part Coder",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 35,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Flutter",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " C/C++",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Python",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Java",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " HTML CSS JavaScript (sort of)",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " Arguing with my code",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            " \"Making it work!\"",
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                              fontSize: SizeConfig.screenWidth / 61,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.screenHeight / 12),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: SizedBox(
+                        height: SizeConfig.screenHeight / 6,
+                        width: 1,
+                        child: Container(color: Colors.grey.shade800),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50,
+          ),
         ],
-
       ),
       backgroundColor: Colors.white,
     );
@@ -89,7 +316,7 @@ class UserCard extends StatelessWidget {
               child: Container(
                 constraints: BoxConstraints(minWidth: 100, maxWidth: 400),
                 decoration: BoxDecoration(
-                    color: Colors.brown.shade900,
+                    color: Color(0xc064584f),
                     border: Border.all(
                       color: Colors.brown.shade800,
                     ),
@@ -99,7 +326,7 @@ class UserCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: CircleAvatar(
-                        backgroundImage: AssetImage('images/maddy1.png'),
+                        backgroundImage: NetworkImage('https://i.ibb.co/mtBdkZx/maddy1.png'),
                         radius: SizeConfig.screenWidth / 11,
                       ),
                     ),
@@ -131,7 +358,7 @@ class UserCard extends StatelessWidget {
                     Card(
                       color: Colors.black54,
                       margin:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
                       child: ListTile(
                         leading: Icon(
                           Icons.add_call,
@@ -151,7 +378,7 @@ class UserCard extends StatelessWidget {
                     Card(
                       color: Colors.black54,
                       margin:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
                       child: ListTile(
                         leading: Icon(
                           Icons.email,
@@ -171,7 +398,7 @@ class UserCard extends StatelessWidget {
                     Card(
                       color: Colors.black54,
                       margin:
-                      EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
                       child: ListTile(
                           leading: Icon(
                             Icons.code,
