@@ -1,9 +1,13 @@
 //maddydevglitch
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_website_1/main.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+int a = 0;
 
 class UrlOpen {
   UrlOpen._();
@@ -19,6 +23,15 @@ class UrlOpen {
 }
 
 class page2 extends StatefulWidget {
+  // void didChangeMetrics() {
+  //   super.didChangeMetrics();
+  //   print('changed size');
+  //
+  //   // setState(() {
+  //   //   print("hi");
+  //   // });
+  // }
+
   const page2({Key? key}) : super(key: key);
 
   @override
@@ -28,8 +41,19 @@ class page2 extends StatefulWidget {
 class _page2State extends State<page2> {
   bool selected = false;
 
+  void initState() {
+    super.initState();
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance!.addObserver(page2());
+    // void update(){
+    //   setState(() {
+    //     print("hi");
+    //   });
+    // }
     return Scaffold(
       body: ListView(
         children: [
@@ -80,16 +104,19 @@ class _page2State extends State<page2> {
               child: Stack(
                 children: [
                   Padding(
-                    padding:  EdgeInsets.only(right: SizeConfig.screenWidth / 1.3,left: 50),
+                    padding: EdgeInsets.only(
+                        right: SizeConfig.screenWidth / 1.3, left: 50),
                     child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Image.network("https://i.ibb.co/Fk17gS8/puzzle.png",
-                            color: Color.fromRGBO(255, 255, 255, 0.25),
-                            colorBlendMode: BlendMode.modulate),
-                   ),
+                      alignment: Alignment.topCenter,
+                      child: Image.network(
+                          "https://i.ibb.co/Fk17gS8/puzzle.png",
+                          color: Color.fromRGBO(255, 255, 255, 0.25),
+                          colorBlendMode: BlendMode.modulate),
+                    ),
                   ),
                   Padding(
-                    padding:  EdgeInsets.only(left: SizeConfig.screenWidth / 1.3,right: 50),
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.screenWidth / 1.3, right: 50),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Image.network("https://i.ibb.co/JjcHn8H/code.png",
@@ -293,9 +320,134 @@ class _page2State extends State<page2> {
           SizedBox(
             height: 50,
           ),
+          // Center(
+          //   child: Text(
+          //     "My Works",
+          //     style: GoogleFonts.lato(
+          //       fontWeight: FontWeight.w300,
+          //       color: Colors.black,
+          //       fontSize: 45,
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(
+          //   height: 20,
+          // ),
+          // Container(
+          //   margin: EdgeInsets.symmetric(vertical: 20.0),
+          //   height: SizeConfig.screenHeight / 3,
+          //   child: ListView(
+          //     scrollDirection: Axis.horizontal,
+          //     children: <Widget>[
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: MyWorks(
+          //             "OpenCEMS",
+          //             "developed an app which incorporates edge computing and as a data point to be sent to a centralized server",
+          //             "https://opencems.sigappfr.org/"),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: MyWorks(
+          //             "Fill My Bowl",
+          //             "A one of a kind community driven app to bridge the supply and demand of the homeless people",
+          //             "https://github.com/MaddyDev-glitch/fill_my_bowl"),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: MyWorks(
+          //             "S-ABLE",
+          //             "(Secure attendance via Bluetooth Low Energy): A cross platform mobile application along with firebase backend and a website for fast parallelized attendance system using Bluetooth geo-validation with proxy detection. ",
+          //             "https://github.com/MaddyDev-glitch/attendance"),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: MyWorks(
+          //             "FYI app ",
+          //             "(VIT students club): \n developed an app for posting, viewing the upcoming events and news.",
+          //             "https://opencems.sigappfr.org/"),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.all(15.0),
+          //   child: Align(
+          //     alignment: Alignment.bottomRight,
+          //     child: Text(
+          //       "View All Works >>",
+          //       style: GoogleFonts.lato(
+          //         fontWeight: FontWeight.w300,
+          //         color: Colors.black,
+          //         fontSize: 35,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          SizedBox(
+            height: 50,
+          ),
+          Center(
+            child: Text(
+              "#MoreToCome",
+              style: GoogleFonts.lato(
+                fontWeight: FontWeight.w200,
+                color: Colors.black,
+                fontSize: 100,
+              ),
+            ),
+          ),
         ],
       ),
       backgroundColor: Colors.white,
+    );
+  }
+}
+
+class MyWorks extends StatelessWidget {
+  MyWorks(this.title, this.content, this.url);
+  String title, content, url;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        UrlOpen.openLink('$url');
+      },
+      child: Container(
+        width: SizeConfig.screenWidth / 2.5,
+        color: Colors.black12,
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "$title",
+                style: GoogleFonts.lato(
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black,
+                  fontSize: 70,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "$content",
+                style: GoogleFonts.lato(
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text("Know more >"),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -326,26 +478,25 @@ class UserCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage('https://i.ibb.co/mtBdkZx/maddy1.png'),
+                        backgroundImage:
+                            NetworkImage('https://i.ibb.co/mtBdkZx/maddy1.png'),
                         radius: SizeConfig.screenWidth / 11,
                       ),
                     ),
                     Text(
                       'T Srimadhaven',
-                      style: TextStyle(
-                        fontFamily: 'DancingScript',
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.lato(
+                        fontWeight: FontWeight.w300,
                         color: Colors.white,
+                        fontSize: 30,
                       ),
                     ),
                     Text(
                       'FLUTTER DEVELOPER',
-                      style: TextStyle(
-                        color: Colors.amber,
-                        fontFamily: 'SourceSansPro',
-                        fontSize: 20.0,
+                      style: GoogleFonts.lato(
                         fontWeight: FontWeight.w200,
+                        color: Colors.amber,
+                        fontSize: 20,
                       ),
                     ),
                     SizedBox(
@@ -366,11 +517,10 @@ class UserCard extends StatelessWidget {
                         ),
                         title: Text(
                           '+1 (919) 931-7369',
-                          style: TextStyle(
-                            fontFamily: 'SourceSansPro',
-                            fontSize: 15.0,
+                          style: GoogleFonts.lato(
+                            fontWeight: FontWeight.w500,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
                           ),
                         ),
                       ),
@@ -386,11 +536,10 @@ class UserCard extends StatelessWidget {
                         ),
                         title: Text(
                           'sri.madhaven@gmail.com',
-                          style: TextStyle(
-                            fontFamily: 'SourceSansPro',
-                            fontSize: 15.0,
+                          style: GoogleFonts.lato(
+                            fontWeight: FontWeight.w500,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
                           ),
                         ),
                       ),
@@ -406,11 +555,10 @@ class UserCard extends StatelessWidget {
                           ),
                           title: Text(
                             'github.com/MaddyDev-glitch',
-                            style: TextStyle(
-                              fontFamily: 'SourceSansPro',
-                              fontSize: 15.0,
+                            style: GoogleFonts.lato(
+                              fontWeight: FontWeight.w500,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
                             ),
                           ),
                           onTap: () => UrlOpen.openLink(
@@ -418,7 +566,7 @@ class UserCard extends StatelessWidget {
                     ),
                     SizedBox(
                       height: 15,
-                    )
+                    ),
                   ],
                 ),
               ),

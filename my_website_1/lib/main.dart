@@ -91,84 +91,96 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 70),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: ImageSlideshow(
-                  width: SizeConfig.screenWidth / 1.5,
-                  height: SizeConfig.screenHeight / 1.5,
-                  initialPage: 0,
-                  indicatorColor: Colors.blue,
-                  indicatorBackgroundColor: Colors.grey,
-                  isLoop: true,
-                  children: [
-                    Image.network(
-                      'https://i.ibb.co/CtHYLtf/b1.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://i.ibb.co/4M2csXR/b2.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://i.ibb.co/yRcfBxg/b3.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://i.ibb.co/gyfgK3x/b4.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://i.ibb.co/T0PmZCY/b5.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://i.ibb.co/Wg5yrdk/b6.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                  onPageChanged: (value) {
-                    print('Page changed: $value');
-                  },
-                  autoPlayInterval: 3000,
-                ),
-              ),
-            ),
-            Align(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 70),
+            child: Align(
               alignment: Alignment.topRight,
-              child: CustomPaint(
-                painter: TrianglePainter(
-                  strokeColor: Colors.black,
-                  strokeWidth: 10,
-                  paintingStyle: PaintingStyle.fill,
-                ),
-                child: Container(
-                  height: SizeConfig.screenHeight / 1.1,
-                  width: SizeConfig.screenWidth / 1.5,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(SizeConfig.screenWidth / 7),
-              child: ListView(
+              child: ImageSlideshow(
+                width: SizeConfig.screenWidth / 1.5,
+                height: SizeConfig.screenHeight / 1.5,
+                initialPage: 0,
+                indicatorColor: Colors.blue,
+                indicatorBackgroundColor: Colors.grey,
+                isLoop: true,
                 children: [
-                  AboutMe(),
+                  Image.network(
+                    'https://i.ibb.co/CtHYLtf/b1.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Image.network(
+                    'https://i.ibb.co/4M2csXR/b2.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Image.network(
+                    'https://i.ibb.co/yRcfBxg/b3.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Image.network(
+                    'https://i.ibb.co/gyfgK3x/b4.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Image.network(
+                    'https://i.ibb.co/T0PmZCY/b5.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  Image.network(
+                    'https://i.ibb.co/Wg5yrdk/b6.png',
+                    fit: BoxFit.cover,
+                  ),
                 ],
+                onPageChanged: (value) {
+                  print('Page changed: $value');
+                },
+                autoPlayInterval: 3000,
               ),
             ),
-            Container(
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: CustomPaint(
+              painter: TrianglePainter(
+                strokeColor: Colors.black,
+                strokeWidth: 10,
+                paintingStyle: PaintingStyle.fill,
+              ),
+              child: Container(
+                height: SizeConfig.screenHeight / 1.1,
+                width: SizeConfig.screenWidth / 1.5,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: SizeConfig.screenWidth / 2.7),
+            child: Align(
+                alignment: Alignment.center, child: AboutMe()),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
                 width: SizeConfig.screenWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 300, top: 10),
+                    Text(
+                      "Contact",
+                      style: GoogleFonts.lato(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white,
+                        fontSize: 35,
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth / 10,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        print("clicked");
+                        launchMailto();
+                      },
                       child: Text(
-                        "Contact",
+                        "Request CV",
                         style: GoogleFonts.lato(
                           fontWeight: FontWeight.w300,
                           color: Colors.white,
@@ -176,45 +188,32 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        print("clicked");
-                        launchMailto();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 300, top: 10),
-                        child: Text(
-                          "Request CV",
-                          style: GoogleFonts.lato(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                            fontSize: 35,
-                          ),
-                        ),
-                      ),
-                    )
+                    SizedBox(
+                      width: SizeConfig.screenWidth / 10,
+                    ),
                   ],
                 )),
-            Padding(
-              padding: EdgeInsets.only(left:SizeConfig.screenWidth / 7,bottom: 100),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(_createRoute());
-                    },
-                    child: Container(
-                      child: Text("Know more >",
-                          style: GoogleFonts.lato(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                            fontSize: 35,
-                          )),
-                    )),
-              ),
-            )
-          ],
-        ),
+          ),
+          Padding(
+            padding:
+                EdgeInsets.only(right: SizeConfig.screenWidth / 6, top: SizeConfig.screenHeight/1.8),
+            child: Align(
+              alignment: Alignment.center,
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(_createRoute());
+                  },
+                  child: Container(
+                    child: Text("Know more >",
+                        style: GoogleFonts.lato(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                          fontSize: 35,
+                        )),
+                  )),
+            ),
+          )
+        ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -228,45 +227,52 @@ class AboutMe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              'Hello,',
-              style: GoogleFonts.lato(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.amber,
-                  fontSize: SizeConfig.screenWidth / 19),
-            ),
-            Text(
-              "It's me",
-              style: GoogleFonts.lato(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.amber,
-                  fontSize: SizeConfig.screenWidth / 22),
-            ),
-          ],
-        ),
-        Text(
-          "Srimadhaven",
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w600,
-              color: Colors.amber,
-              fontSize: SizeConfig.screenWidth / 18),
-        ),
-        Text(
-          "An enthusiastic upcoming software developer who loves to create. \nStudies Computer Science @ SUNY at Binghamton. \nA competitive cyclist who likes to travel and a hobby photographer  ",
-          style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w200,
-              color: Colors.white,
-              height: 1.5,
-              fontSize: 20),
-        )
-      ],
+    return Container(
+      height: SizeConfig.screenHeight / 1.9,
+      width: SizeConfig.screenWidth / 2.3,
+      decoration: BoxDecoration(
+          color: Colors.black87,
+          borderRadius: BorderRadius.all(Radius.circular(40))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                'Hello, ',
+                style: GoogleFonts.lato(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.amber,
+                    fontSize: SizeConfig.screenWidth / 19),
+              ),
+              Text(
+                "It's me",
+                style: GoogleFonts.lato(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.amber,
+                    fontSize: SizeConfig.screenWidth / 22),
+              ),
+            ],
+          ),
+          Text(
+            "Srimadhaven",
+            style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w600,
+                color: Colors.amber,
+                fontSize: SizeConfig.screenWidth / 18),
+          ),
+          Text(
+            "An enthusiastic upcoming software developer who loves to create. \nStudies Computer Science @ SUNY at Binghamton. \nA competitive cyclist who likes to travel and a hobby photographer  ",
+            style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w200,
+                color: Colors.white,
+                height: 1.5,
+                fontSize: 20),
+          )
+        ],
+      ),
     );
   }
 }
@@ -278,8 +284,8 @@ class TrianglePainter extends CustomPainter {
 
   TrianglePainter(
       {this.strokeColor = Colors.black,
-        this.strokeWidth = 3,
-        this.paintingStyle = PaintingStyle.stroke});
+      this.strokeWidth = 3,
+      this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
