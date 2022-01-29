@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style>
+
+      .container {
+        width: 100vw;
+        height: 100vh;
+        display: flex; /* Default Axis is X*/
+        justify-content: center; /* Main Axis */
+        align-items: center; /* Cross Axis */
+      }
+      .indicator{
+        width: 15vw;
+      }
+</style>
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -26,7 +39,29 @@
   <title>websitex</title>
   <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body style="overflow: hidden,background-color:black">
+<div id="loading_indicator" class="container">
+  <img class="indicator" src="./assets/loading.gif" />
+</div>
+<script>
+  document.addEventListener('wheel', function(e) {
+    e.ctrlKey && e.preventDefault();
+  }, {
+    passive: false,
+  });
+</script>
+<script>
+  window.addEventListener('keydown', function(e) {
+    if (event.metaKey || event.ctrlKey) {
+      switch (event.key) {
+        case '=':
+        case '-':
+          event.preventDefault();
+          break;
+      }
+    }
+  });
+</script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
@@ -54,7 +89,7 @@
   firebase.analytics();
 </script>
   <script>
-    var serviceWorkerVersion = '543764959';
+    var serviceWorkerVersion = '3794007269';
     var scriptLoaded = false;
     function loadMainDartJs() {
       if (scriptLoaded) {
@@ -117,5 +152,15 @@
       loadMainDartJs();
     }
   </script>
+<script>
+  window.onload = function () {
+        setTimeout(function () {
+          var loadingIndicator = document.getElementById("loading_indicator");
+          if (loadingIndicator) {
+            loadingIndicator.remove();
+          }
+        }, 10000);
+};
+</script>
 </body>
 </html>
